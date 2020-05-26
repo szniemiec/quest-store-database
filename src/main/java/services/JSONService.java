@@ -6,7 +6,6 @@ import database.DatabaseCredentials;
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class JSONService {
 
@@ -26,15 +25,6 @@ public class JSONService {
             ex.printStackTrace();
         }
         return null;
-    }
-
-    private DatabaseCredentials mapToCredentials(Map<String, String> map) {
-        String host = map.get("host");
-        String port = map.get("port");
-        String database = map.get("database");
-        String login = map.get("login");
-        String password = map.get("password");
-        return new DatabaseCredentials(host, port, database, login, password);
     }
 
 }
