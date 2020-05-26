@@ -16,11 +16,11 @@ public class JSONService {
 
             BufferedReader reader = Files.newBufferedReader(Paths.get("enviroment.json"));
 
-            Map<String, String> map = gson.fromJson(reader, Map.class);
+            DatabaseCredentials credentials = gson.fromJson(reader, DatabaseCredentials.class);
 
             reader.close();
 
-            return mapToCredentials(map);
+            return credentials;
 
         } catch (Exception ex) {
             ex.printStackTrace();
