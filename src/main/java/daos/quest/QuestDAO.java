@@ -1,15 +1,18 @@
 package daos.quest;
 
+import enums.QuestCategory;
 import models.Quest;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface QuestDAO {
 
-    public List<Quest> getQuests();
+    List<Quest> getQuests() throws SQLException;
 
-    public Quest getQuest(int id);
+    Quest getQuest(int id);
 
-    public void deleteQuest(int id);
+    void deleteQuest(int id);
 
+    void addNewQuest(String name, String description, QuestCategory category, int reward);
 }
