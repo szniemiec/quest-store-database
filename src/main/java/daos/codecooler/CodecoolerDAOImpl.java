@@ -41,7 +41,7 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
     }
 
     @Override
-    public List<Codecooler> getCodecooler(int id) throws SQLException {
+    public Codecooler getCodecooler(int id) throws SQLException {
         final String SELECT_SQL = "SELECT * FROM \"Users\" WHERE id = " + id + ";";
 
         Statement st = postgreSQLJDBC.getConnection().createStatement();
@@ -55,12 +55,12 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
             e.printStackTrace();
         }
 
-        return codecoolers;
+        return codecoolers.get(0);
     }
 
     @Override
     public void deleteCodecooler(int id) {
-        final String DELETE_SQL = "DELETE FROM categories WHERE id = ?;";
+        final String DELETE_SQL = "DELETE FROM \"Categories\" WHERE id = ?;";
 
         try {
             PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);

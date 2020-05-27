@@ -9,7 +9,7 @@ public interface CodecoolerDAO {
 
     public List<Codecooler> getCodecoolers() throws SQLException;
 
-    public List<Codecooler> getCodecooler(int id) throws SQLException;
+    public Codecooler getCodecooler(int id) throws SQLException;
 
     public void deleteCodecooler(int id);
 
