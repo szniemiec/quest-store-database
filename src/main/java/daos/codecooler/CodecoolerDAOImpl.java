@@ -71,17 +71,6 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
         }
     }
 
-//    private RoleEnum roleIdToEnum(int roleId) throws Exception {
-//        RoleEnum roleEnum;
-//        switch (roleId) {
-//            case 1 -> roleEnum = RoleEnum.CREEP;
-//            case 2 -> roleEnum = RoleEnum.MENTOR;
-//            case 3 -> roleEnum = RoleEnum.CODECOOLER;
-//            default -> throw new Exception("Wrong role id");
-//        }
-//        return roleEnum;
-//    }
-
     private List<Codecooler> createCodecoolerList(ResultSet rs) throws Exception {
         List<Codecooler> codecoolers = new ArrayList<>();
 
