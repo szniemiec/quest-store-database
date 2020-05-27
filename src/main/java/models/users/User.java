@@ -14,4 +14,20 @@ public abstract class User {
         this.lastName = lastName;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public AccountCredentials getAccountCredentials() {
+        return accountCredentials;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
 }
