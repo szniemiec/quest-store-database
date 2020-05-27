@@ -68,4 +68,16 @@ public class MentorDAOImpl implements MentorDAO {
             e.printStackTrace();
         }
     }
+    public void editMentor(int id, String databaseColumn, String newValue) {
+        final String DELETE_SQL = "UPDATE \"Users\" SET "+ databaseColumn + "= ? WHERE id = ?;";
+
+        try {
+            PreparedStatement preparedStatement = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, newValue);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
