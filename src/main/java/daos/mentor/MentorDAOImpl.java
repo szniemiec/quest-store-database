@@ -1,7 +1,7 @@
 package daos.mentor;
 
 import database.PostgreSQLJDBC;
-import enums.Role;
+import enums.RoleEnum;
 import models.users.AccountCredentials;
 import models.users.Mentor;
 
@@ -15,6 +15,7 @@ import java.util.List;
 public class MentorDAOImpl implements MentorDAO {
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet result;
+
 
     public MentorDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
@@ -48,7 +49,7 @@ public class MentorDAOImpl implements MentorDAO {
             String firstName = result.getString("first_name");
             String lastName = result.getString("last_name");
 
-            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, Role.MENTOR);
+            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
             Mentor mentor = new Mentor(id, accountCredentials, firstName, lastName);
             mentors.add(mentor);
         }
