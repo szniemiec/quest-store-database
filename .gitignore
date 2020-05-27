@@ -32,7 +32,7 @@
 .idea/**/libraries
 
 # Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
+# When using Gradle or Maven with auto-import, you should exclude moduleEnum files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
  .idea/modules.xml
@@ -132,3 +132,7 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+enviroment.csv
+enviroment.json
+
