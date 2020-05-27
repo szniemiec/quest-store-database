@@ -6,11 +6,10 @@ import models.users.Mentor;
 import java.util.List;
 
 public interface MentorDAO {
+    List<Mentor> getMentors() throws Exception;
 
-    public List<Mentor> getMentors();
+    void getMentor(int id);
 
-    public void getMentor(int id);
-
-    public void deleteMentor(int id);
+    void deleteMentor(int id);
 
 }

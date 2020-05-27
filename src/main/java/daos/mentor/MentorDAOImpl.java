@@ -2,22 +2,21 @@ package daos.mentor;
 
 import database.PostgreSQLJDBC;
 import enums.Role;
-import jdk.internal.vm.compiler.collections.UnmodifiableEconomicMap;
 import models.users.AccountCredentials;
 import models.users.Mentor;
-import models.users.User;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MentorDAOImpl {
+public class MentorDAOImpl implements MentorDAO {
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet result;
 
-    public MentorDAOImpl(PostgreSQLJDBC postgreSQLJDBC) throws SQLException {
+    public MentorDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
     }
 
@@ -31,6 +30,11 @@ public class MentorDAOImpl {
             exception.printStackTrace();
         }
         return mentors;
+    }
+
+    @Override
+    public void getMentor(int id) {
+
     }
 
     private List<Mentor> addMentorToList(ResultSet result) throws Exception {
@@ -50,7 +54,17 @@ public class MentorDAOImpl {
         }
         return mentors;
     }
-    public void deleteMentor (int id){
 
+    @Override
+    public void deleteMentor(int id) {
+        final String DELETE_SQL = "DELETE FROM \"Users\" WHERE id = ?;";
+
+        try {
+            PreparedStatement preparedStatement = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
