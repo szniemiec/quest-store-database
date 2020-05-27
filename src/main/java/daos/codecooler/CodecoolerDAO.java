@@ -13,8 +13,4 @@ public interface CodecoolerDAO {
 
     public void deleteCodecooler(int id);
 
-    public int getPurse();
-
-    public int getCoins();
-
 }

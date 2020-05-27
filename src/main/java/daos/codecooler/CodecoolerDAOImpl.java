@@ -7,6 +7,7 @@ import models.Purse;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -59,17 +60,15 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
 
     @Override
     public void deleteCodecooler(int id) {
+        final String DELETE_SQL = "DELETE FROM categories WHERE id = ?;";
 
-    }
-
-    @Override
-    public int getPurse() {
-        return 0;
-    }
-
-    @Override
-    public int getCoins() {
-        return 0;
+        try {
+            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 //    private RoleEnum roleIdToEnum(int roleId) throws Exception {
@@ -82,18 +81,6 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
 //        }
 //        return roleEnum;
 //    }
-
-    private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
-        ModuleEnum moduleEnum;
-        switch (moduleId) {
-            case 1 -> moduleEnum = ModuleEnum.PROG_BASICS;
-            case 2 -> moduleEnum = ModuleEnum.JAVA_OOP;
-            case 3 -> moduleEnum = ModuleEnum.WEB;
-            case 4 -> moduleEnum = ModuleEnum.ADVANCED;
-            default -> throw new Exception("Wrong module id");
-        }
-        return moduleEnum;
-    }
 
     private List<Codecooler> createCodecoolerList(ResultSet rs) throws Exception {
         List<Codecooler> codecoolers = new ArrayList<>();
@@ -116,6 +103,18 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
             codecoolers.add(codecooler);
         }
         return codecoolers;
+    }
+
+    private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
+        ModuleEnum moduleEnum;
+        switch (moduleId) {
+            case 1 -> moduleEnum = ModuleEnum.PROG_BASICS;
+            case 2 -> moduleEnum = ModuleEnum.JAVA_OOP;
+            case 3 -> moduleEnum = ModuleEnum.WEB;
+            case 4 -> moduleEnum = ModuleEnum.ADVANCED;
+            default -> throw new Exception("Wrong module id");
+        }
+        return moduleEnum;
     }
 
 }
