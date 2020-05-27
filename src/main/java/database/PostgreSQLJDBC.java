@@ -34,7 +34,7 @@ public class PostgreSQLJDBC {
     }
 
     public void disconnectFromDatabase() throws SQLException {
-        this.stmt.close();
+//        this.stmt.close();
         this.c.close();
     }
     public Connection getConnection() {
