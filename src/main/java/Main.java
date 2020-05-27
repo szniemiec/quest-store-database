@@ -1,11 +1,14 @@
 import daos.codecooler.CodecoolerDAOImpl;
+import daos.quest.QuestDAOImpl;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
+import models.Quest;
 import models.users.Codecooler;
 import services.JSONService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -25,6 +28,17 @@ public class Main {
         for (Codecooler c : codecoolerList) {
             System.out.println(c.getAccountCredentials().getEmail());
         }
+
+        System.out.println("lalalal");
+
+        QuestDAOImpl questDAO = new QuestDAOImpl(database);
+        List<Quest> questList = questDAO.getQuests();
+        Quest quest = questDAO.getQuest(3);
+        System.out.println(quest.getName());
+
+//        for (Quest q : questList) {
+//            System.out.println(q.getName());
+//        }
 
         database.disconnectFromDatabase();
     }
