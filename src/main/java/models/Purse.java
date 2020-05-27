@@ -12,8 +12,8 @@ public class Purse {
     private Map<Quest, QuestStatus> questList;
     private Map<Artifact, ArtifactStatus> artifactList;
 
-    public Purse() {
-        this.coins = 0;
+    public Purse(int coins) {
+        this.coins = coins;
         questList = new HashMap<Quest, QuestStatus>();
         artifactList = new HashMap<Artifact, ArtifactStatus>();
     }
