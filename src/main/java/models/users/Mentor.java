@@ -1,9 +1,65 @@
 package models.users;
 
+import java.util.Map;
+
 public class Mentor extends User {
 
-    public Mentor(int id, AccountCredentials accountCredentials, String firstName, String lastName) {
-        super(id, accountCredentials, firstName, lastName);
+    private String  id;
+    private String email;
+    private String password;
+    private String name;
+    private String surname;
+    private String room;
+    private String nickName;
+    private Map<String, String> collectedData;
+
+    public Mentor(Map<String, String> mentorData){
+        super();
+        email = mentorData.get("email");
+        password =mentorData.get("password");
+        name = mentorData.get("firstName");
+        surname = mentorData.get("surname");
+        room = mentorData.get("room");
+        nickName = mentorData.get("nickName");
+        collectedData = mentorData;
     }
+
+    public Map<String, String> getCollectedData() {
+        return collectedData;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+        collectedData.put("id", id);
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public String getNickName(){
+        return nickName;
+    }
+
 
 }

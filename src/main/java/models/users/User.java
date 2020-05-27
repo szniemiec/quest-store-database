@@ -14,7 +14,11 @@ public abstract class User {
         this.lastName = lastName;
     }
 
-    public int getId() {
+    public User() {
+
+    }
+
+    public String getId() {
         return id;
     }
 
