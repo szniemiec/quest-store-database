@@ -4,6 +4,11 @@ import java.util.Scanner;
 
 public class View {
     Scanner scanner = new Scanner(System.in);
+    public final String NAME = "Please provide name: ";
+    public final String DESCRIPTION = "Provide short description: ";
+    public final String CATEGORY = "Provide category: \n" +
+            "1 - EASY\n2 - MEDIUM\n3 - HARD\n4-Shirts\n";
+    public final String REWARD = "Reward amount:";
 
     public void clearScreen() {
         System.out.print("\033[H\033[2J");
