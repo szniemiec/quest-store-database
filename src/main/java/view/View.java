@@ -44,4 +44,10 @@ public class View {
                 "\n  7. Check student's valet" +
                 "\n 8. Exit");
     }
+    public void HandleMenuEdit(){
+        System.out.println("        Editor MENU" +
+                        "\n\n 1. Edit" +
+                        "\n 2. Delete" +
+                        "\n 3. Exit");
+    }
 }
