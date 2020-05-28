@@ -134,4 +134,26 @@ public class MentorController {
         artifactDAO.AddArtifact(name, description, reward);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
     }
+
+    public void removeQuest() {
+        view.displayMessageWithLn("Please enter the ID of the Quest to remove:");
+        int questId = view.getIntInput();
+        questDAO.deleteQuest(questId);
+        System.out.println("ID: " + questId + ". The product has been removed");
+    }
+
+    public void removeArtifact() {
+        view.displayMessageWithLn("Please, enter the ID of the Artifact to remove:");
+        int ArtifactId = view.getIntInput();
+        artifactDAO.deleteArtifact(ArtifactId);
+        System.out.println("ID: " + ArtifactId + ". The product has been removed");
+    }
+
+    public void editQuest() {
+
+    }
+
+    public void editArtifact() {
+
+    }
 }
