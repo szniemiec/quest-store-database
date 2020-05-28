@@ -38,13 +38,12 @@ public class MentorController {
                 case "2":
                     createNewArtifact();
                     break;
-
                 case "3":
+                    HandleMenuEditQuest();
                     break;
-
                 case "4":
+                    HandleMenuEditArtifact();
                     break;
-
                 case "5":
                     break;
 
@@ -57,7 +56,6 @@ public class MentorController {
                 case "8":
                     isRunning = false;
                     break;
-
                 default:
                     break;
 
@@ -65,7 +63,53 @@ public class MentorController {
         }
     }
 
-    public void createNewQuest() {
+    public void HandleMenuEditQuest() {
+        boolean isRunning = true;
+        while (isRunning) {
+            view.clearScreen();
+            view.HandleMenuEdit();
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    editQuest();
+                    break;
+                case "2":
+                    removeQuest();
+                    break;
+                case "3":
+                    isRunning = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void HandleMenuEditArtifact() {
+        boolean isRunning = true;
+        while (isRunning) {
+            view.clearScreen();
+            view.HandleMenuEdit();
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    editArtifact();
+                    break;
+                case "2":
+                    removeArtifact();
+                    break;
+                case "3":
+                    isRunning = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void createNewQuest() {
         System.out.println(view.NAME);
         String name = view.getInput();
         System.out.println(view.DESCRIPTION);
@@ -79,7 +123,7 @@ public class MentorController {
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
     }
 
-    public void createNewArtifact() {
+    private void createNewArtifact() {
         System.out.println(view.NAME);
         String name = view.getInput();
         System.out.println(view.DESCRIPTION);
