@@ -3,8 +3,9 @@ package controller;
 import daos.artifact.ArtifactDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
+import models.Artifact;
+import models.Quest;
 import models.users.Codecooler;
-
 import view.View;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class MentorController {
                     createNewQuest();
                     break;
                 case "2":
-                    createNewArtifact();
+//                    createNewArtifact();
                     break;
                 case "3":
                     HandleMenuEditQuest();
@@ -119,21 +120,25 @@ public class MentorController {
         System.out.println(view.REWARD);
         int reward = view.getIntInput();
 
-        questDAO.AddQuest(name, description, category, reward);
+//        Quest quest = new Quest();
+
+//        questDAO.addQuest(quest);
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
     }
 
-    private void createNewArtifact() {
-        System.out.println(view.NAME);
-        String name = view.getInput();
-        System.out.println(view.DESCRIPTION);
-        int description = view.getIntInput();
-        System.out.println(view.REWARD);
-        int reward = view.getIntInput();
-
-        artifactDAO.AddArtifact(name, description, reward);
-        artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
-    }
+//    private void createNewArtifact() {
+//        System.out.println(view.NAME);
+//        String name = view.getInput();
+//        System.out.println(view.DESCRIPTION);
+//        int description = view.getIntInput();
+//        System.out.println(view.REWARD);
+//        int reward = view.getIntInput();
+//
+//        Artifact artifact = new Artifact()
+//
+//        artifactDAO.addArtifact(artifact);
+//        artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
+//    }
 
     public void removeQuest() {
         view.displayMessageWithLn("Please enter the ID of the Quest to remove:");
