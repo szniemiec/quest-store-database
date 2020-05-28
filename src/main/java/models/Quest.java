@@ -7,15 +7,23 @@ public class Quest {
     private int id;
     private String name;
     private String description;
-    private QuestCategoryEnum questCategoryEnum;
     private int reward;
+    private QuestCategoryEnum questCategoryEnum;
 
-    public Quest(int id, String name, String description, QuestCategoryEnum questCategoryEnum, int reward) {
+    public Quest(int id, String name, String description, int reward, QuestCategoryEnum questCategoryEnum) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.questCategoryEnum = questCategoryEnum;
         this.reward = reward;
+        this.questCategoryEnum = questCategoryEnum;
+    }
+
+    public Quest(String name, String description, int reward, QuestCategoryEnum questCategoryEnum) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.reward = reward;
+        this.questCategoryEnum = questCategoryEnum;
     }
 
     public int getId() {
@@ -30,12 +38,12 @@ public class Quest {
         return description;
     }
 
-    public QuestCategoryEnum getQuestCategoryEnum() {
-        return questCategoryEnum;
-    }
-
     public int getReward() {
         return reward;
+    }
+
+    public QuestCategoryEnum getQuestCategoryEnum() {
+        return questCategoryEnum;
     }
 
 }

@@ -11,6 +11,10 @@ public interface ArtifactDAO {
 
     public Artifact getArtifact(int id) throws SQLException;
 
+    public void addArtifact(Artifact artifact);
+
     public void deleteArtifact(int id);
+
+    public void editArtifact(Artifact artifact);
 
 }
