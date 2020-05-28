@@ -21,6 +21,10 @@ public class Artifact {
         this.cost = cost;
     }
 
+    public Artifact() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -37,4 +41,22 @@ public class Artifact {
         return cost;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Artifact setTitle(String title) {
+        this.title = title;
+        return null;
+    }
+
+    public Artifact setDescription(String description) {
+        this.description = description;
+        return null;
+    }
+
+    public Artifact setCost(int cost) {
+        this.cost = cost;
+        return null;
+    }
 }

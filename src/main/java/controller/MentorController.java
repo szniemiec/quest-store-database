@@ -15,20 +15,23 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MentorController {
-
+    private Artifact artifact;
+    private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
+    private InputService inputService;
     private QuestDAOImpl questDAO;
     private ArtifactDAOImpl artifactDAO;
     private boolean isEditing;
     public View view;
     public List<Codecooler> codecoolers;
-    InputService inputService;
 
     public MentorController() {
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
         inputService = new InputService();
+        artifact = new Artifact();
+        quest = new Quest();
     }
 
     public void MenuMentor() throws Exception {
@@ -158,10 +161,10 @@ public class MentorController {
 
     public void editQuestDetailsMenu() {
         System.out.println("\nEDIT QUEST DATA PANEL");
-        view.displayMessageWithLn("Enter a quest Id:");
-        int questId = view.getIntInput();
+        inputService.displayMessageWithLn("Enter a quest Id:");
+        int questId = inputService.getIntInput();
         isEditing = true;
-        view.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n3. Category\n" +
+        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n3. Category\n" +
                 "4. Reward\n5. Exit");
         while (isEditing) {
             editQuest(questId);
@@ -171,26 +174,26 @@ public class MentorController {
     public void editQuest(int questId) {
         QuestDAOImpl questDao = new QuestDAOImpl(postgreSQLJDBC);
         String newValue;
-        int userChoice = view.getIntInput();
+        int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Name", newValue);
+                questDao.editQuest(quest.setName(newValue));
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Description", newValue);
+                questDao.editQuest(quest.setDescription(newValue));
                 isEditing = false;
                 break;
             case 3:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "category_id", newValue);
+                questDao.editQuest(quest.setCategory(newValue));
                 isEditing = false;
                 break;
             case 4:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Reward", newValue);
+                questDao.editQuest(quest.setReward(newValue));
                 isEditing = false;
                 break;
             case 5:
@@ -203,15 +206,15 @@ public class MentorController {
 
     public String getUserInput() {
         System.out.println("Please, type a new value:");
-        return view.getInput();
+        return inputService.getStringInput();
     }
 
     public void editArtifactDetailsMenu() {
         System.out.println("\nEDIT ARTIFACT DATA PANEL");
-        view.displayMessageWithLn("Enter a artifact Id:");
-        int artifactId = view.getIntInput();
+        inputService.displayMessageWithLn("Enter a artifact Id:");
+        int artifactId = inputService.getIntInput();
         isEditing = true;
-        view.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n 3. Reward\n4. Exit");
+        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n 3. Reward\n4. Exit");
         while (isEditing) {
             editArtifact(artifactId);
         }
@@ -220,21 +223,21 @@ public class MentorController {
     public void editArtifact(int artifactId) {
         ArtifactDAOImpl artifactDao = new ArtifactDAOImpl(postgreSQLJDBC);
         String newValue;
-        int userChoice = view.getIntInput();
+        int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Title", newValue);
+                artifactDao.editArtifact(artifact.setTitle(newValue));
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Description", newValue);
+                artifactDao.editArtifact(artifact.setDescription(newValue));
                 isEditing = false;
                 break;
             case 3:
-                newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Cost", newValue);
+                  int newValueInt =  Integer.valueOf(getUserInput());
+                artifactDao.editArtifact(artifact.setCost(newValueInt));
                 isEditing = false;
                 break;
             case 4:

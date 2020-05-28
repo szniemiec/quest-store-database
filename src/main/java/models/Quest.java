@@ -26,6 +26,10 @@ public class Quest {
         this.questCategoryEnum = questCategoryEnum;
     }
 
+    public Quest() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -46,4 +50,23 @@ public class Quest {
         return questCategoryEnum;
     }
 
+    public Quest setName(String newValue) {
+        this.name = name;
+        return null;
+    }
+
+    public Quest setDescription(String newValue) {
+        this.description = description;
+        return null;
+    }
+
+    public Quest setCategory(String newValue) {
+        this.questCategoryEnum = questCategoryEnum;
+        return  null;
+    }
+
+    public Quest setReward(String newValue) {
+        this.reward = reward;
+        return null;
+    }
 }
