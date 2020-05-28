@@ -9,7 +9,6 @@ public class Creep extends User{
     private String password;
     private String name;
     private String surname;
-    private String nickName;
     private Map<String, String> collectedData;
 
     public Creep(Map<String, String> creepyGuyData){
@@ -17,7 +16,6 @@ public class Creep extends User{
         password =creepyGuyData.get("password");
         name = creepyGuyData.get("firstName");
         surname = creepyGuyData.get("surname");
-        nickName = creepyGuyData.get("nickName");
         collectedData = creepyGuyData;
     }
 
@@ -51,7 +49,4 @@ public class Creep extends User{
     }
 
 
-    public String getNickName(){
-        return nickName;
-    }
 }

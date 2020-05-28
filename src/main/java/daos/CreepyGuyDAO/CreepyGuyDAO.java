@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CreepyGuyDAO implements CreepyGuyDaoInterface {
+public abstract class CreepyGuyDAO implements CreepyGuyDaoInterface {
     Connection connection;
     PreparedStatement ps;
     View view = new View();
@@ -40,9 +40,7 @@ public class CreepyGuyDAO implements CreepyGuyDaoInterface {
         }
     }
 
-    public void editMentor(Mentor mentor, String id) {
 
-    }
 
     public void editMentor(Mentor mentor, int id){
         try {
@@ -68,7 +66,7 @@ public class CreepyGuyDAO implements CreepyGuyDaoInterface {
     }
 
     private void addMentorRecord(Mentor mentor) throws SQLException, NumberFormatException{
-        ps = connection.prepareStatement("INSERT INTO login_access (email, password, access_level)"
+        ps = connection.prepareStatement("INSERT INTO login_access (email, password, id)"
                 + "\n VALUES (?, ?, ?);");
         ps.setString(1, mentor.getEmail());
         ps.setString(2, mentor.getPassword());
@@ -99,12 +97,8 @@ public class CreepyGuyDAO implements CreepyGuyDaoInterface {
         ps = connection.prepareStatement("Update codecoolers SET coolcoins = ?, " +
                 "quest_in_progress = ?, first_name = ?, last_name = ?;");
         ps.setInt(1, 0);
-        ps.setInt(2, 1);
-        ps.setInt(4, 0);
-        ps.setInt(5, 1);
-        ps.setString(6, mentor.getName());
-        ps.setString(7, mentor.getSurname());
-        ps.setInt(9, Integer.parseInt(String.valueOf(id)));
+        ps.setString(2, mentor.getName());
+        ps.setString(3, mentor.getSurname());
         ps.executeUpdate();
         connection.commit();
         ps.close();
@@ -161,8 +155,6 @@ public class CreepyGuyDAO implements CreepyGuyDaoInterface {
             mentorData.put("surname", rs.getString("last_name"));
             mentorData.put("email", rs.getString("email"));
             mentorData.put("password", rs.getString("password"));
-            mentorData.put("nickName", rs.getString("nickname"));
-            mentorData.put("room", String.valueOf(rs.getInt("actual_room")));
             if(rs.getInt("access_level") != 2){
                 throw new Exception();
             }

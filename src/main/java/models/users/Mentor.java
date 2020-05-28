@@ -9,8 +9,6 @@ public class Mentor extends User {
     private String password;
     private String name;
     private String surname;
-    private String room;
-    private String nickName;
     private Map<String, String> collectedData;
 
     public Mentor(Map<String, String> mentorData){
@@ -19,8 +17,6 @@ public class Mentor extends User {
         password =mentorData.get("password");
         name = mentorData.get("firstName");
         surname = mentorData.get("surname");
-        room = mentorData.get("room");
-        nickName = mentorData.get("nickName");
         collectedData = mentorData;
     }
 
@@ -52,14 +48,5 @@ public class Mentor extends User {
     public String getSurname() {
         return surname;
     }
-
-    public String getRoom() {
-        return room;
-    }
-
-    public String getNickName(){
-        return nickName;
-    }
-
 
 }
