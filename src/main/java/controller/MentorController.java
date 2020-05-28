@@ -4,8 +4,11 @@ import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
+import enums.QuestCategoryEnum;
+import models.Artifact;
+import models.Quest;
 import models.users.Codecooler;
-
+import services.InputService;
 import view.View;
 
 import java.util.List;
@@ -19,14 +22,16 @@ public class MentorController {
     private boolean isEditing;
     public View view;
     public List<Codecooler> codecoolers;
+    InputService inputService;
 
     public MentorController() {
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
+        inputService = new InputService();
     }
 
-    public void MenuMentor() {
+    public void MenuMentor() throws Exception {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -111,42 +116,42 @@ public class MentorController {
         }
     }
 
-    private void createNewQuest() {
+    private void createNewQuest() throws Exception {
         System.out.println(view.NAME);
-        String name = view.getInput();
+        String name = inputService.getStringInput();
         System.out.println(view.DESCRIPTION);
-        int description = view.getIntInput();
-        System.out.println(view.CATEGORY);
-        String category = view.getInput();
+        String description = inputService.getStringInput();
         System.out.println(view.REWARD);
-        int reward = view.getIntInput();
+        int reward = inputService.getIntInput();
+        System.out.println(view.CATEGORY);
+        int categoryId = inputService.getIntInput();
 
-        questDAO.AddQuest(name, description, category, reward);
+        questDAO.addQuest(new Quest(name, description, reward, categoryIdToEnum(categoryId)));
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
     }
 
     private void createNewArtifact() {
         System.out.println(view.NAME);
-        String name = view.getInput();
+        String title = inputService.getStringInput();
         System.out.println(view.DESCRIPTION);
-        int description = view.getIntInput();
-        System.out.println(view.REWARD);
-        int reward = view.getIntInput();
+        String description = inputService.getStringInput();
+        System.out.println(view.COST);
+        int cost = inputService.getIntInput();
 
-        artifactDAO.AddArtifact(name, description, reward);
+        artifactDAO.addArtifact(new Artifact(title, description, cost));
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
     }
 
     public void removeQuest() {
-        view.displayMessageWithLn("Please enter the ID of the Quest to remove:");
-        int questId = view.getIntInput();
+        inputService.displayMessageWithLn("Please enter the ID of the Quest to remove:");
+        int questId = inputService.getIntInput();
         questDAO.deleteQuest(questId);
         System.out.println("ID: " + questId + ". The product has been removed");
     }
 
     public void removeArtifact() {
-        view.displayMessageWithLn("Please, enter the ID of the Artifact to remove:");
-        int ArtifactId = view.getIntInput();
+        inputService.displayMessageWithLn("Please, enter the ID of the Artifact to remove:");
+        int ArtifactId = inputService.getIntInput();
         artifactDAO.deleteArtifact(ArtifactId);
         System.out.println("ID: " + ArtifactId + ". The product has been removed");
     }
@@ -239,4 +244,17 @@ public class MentorController {
                 break;
         }
     }
+
+    private QuestCategoryEnum categoryIdToEnum(int id) throws Exception {
+        QuestCategoryEnum questCategoryEnum;
+        switch (id) {
+            case 1 -> questCategoryEnum = QuestCategoryEnum.EASY;
+            case 2 -> questCategoryEnum = QuestCategoryEnum.MEDIUM;
+            case 3 -> questCategoryEnum = QuestCategoryEnum.HARD;
+            case 4 -> questCategoryEnum = QuestCategoryEnum.SHIRTS;
+            default -> throw new Exception("Wrong category id");
+        }
+        return questCategoryEnum;
+    }
+
 }

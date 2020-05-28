@@ -1,6 +1,5 @@
 package daos.mentor;
 
-import models.users.Codecooler;
 import models.users.Mentor;
 
 import java.util.List;
