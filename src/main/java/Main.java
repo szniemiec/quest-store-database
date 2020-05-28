@@ -1,4 +1,3 @@
-import daos.quest.QuestDAOImpl;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import services.JSONService;
@@ -10,8 +9,6 @@ public class Main {
         PostgreSQLJDBC database = new PostgreSQLJDBC();
         DatabaseCredentials credentials = jsonService.readEnviroment();
         database.connectToDatabase(credentials);
-
-        QuestDAOImpl questDAO = new QuestDAOImpl(database);
 
         database.disconnectFromDatabase();
 
