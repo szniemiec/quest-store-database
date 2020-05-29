@@ -71,7 +71,7 @@ public class View {
             System.out.println(String.format("%-2s %-2s %-30s %-2s %-5s %-2s %-6s %-2s %-2s %-5.2f %-1s", artifact.getId(), "|",
                     artifact.getTitle(), "|",
                     artifact.getDescription(), "|",
-                    artifact.getPrice(), "|", "*",
+                    artifact.getCost(), "|", "*",
                     "|"));
         }
         System.out.println(String.format("%s", "--------------------------------------------------------------------"));
