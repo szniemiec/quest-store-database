@@ -56,12 +56,55 @@ public class QuestDAOImpl implements QuestDAO {
     }
 
     @Override
+    public void addQuest(Quest quest) {
+        final String INSERT_SQL = "INSERT INTO \"Quests\" (\"Name\", \"Description\", \"Reward\", \"category_id\")" +
+                "VALUES (?, ?, ?, ?);";
+
+        String name = quest.getName();
+        String description = quest.getDescription();
+        int reward = quest.getReward();
+        QuestCategoryEnum questCategoryEnum = quest.getQuestCategoryEnum();
+
+        PreparedStatement ps = null;
+
+        try {
+            ps = this.postgreSQLJDBC.getConnection().prepareStatement(INSERT_SQL);
+            ps.setString(1, name);
+            ps.setString(2, description);
+            ps.setInt(3, reward);
+            ps.setInt(4, questCategoryEnum.getCategoryId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void deleteQuest(int id) {
         final String DELETE_SQL = "DELETE FROM \"Quests\" WHERE id = ?;";
 
         try {
             PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
             ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editQuest(Quest quest) {
+        final String UPDATE_SQL = "UPDATE \"Quests\"" +
+                "SET \"Name\" = ?, \"Description\" = ?, \"Reward\" = ?, category_id = ?" +
+                "WHERE id = ?;";
+
+        try {
+            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
+            ps.setString(1, quest.getName());
+            ps.setString(2, quest.getDescription());
+            ps.setInt(3, quest.getReward());
+            ps.setInt(4, quest.getQuestCategoryEnum().getCategoryId());
+            ps.setInt(5, quest.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,5 +140,4 @@ public class QuestDAOImpl implements QuestDAO {
         }
         return questCategoryEnum;
     }
-
 }

@@ -8,7 +8,7 @@ import enums.QuestCategoryEnum;
 import models.Artifact;
 import models.Quest;
 import models.users.Codecooler;
-
+import services.InputService;
 import view.View;
 
 import java.sql.SQLException;
@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MentorController {
-
+    private Artifact artifact;
+    private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
+    private InputService inputService;
     private QuestDAOImpl questDAO;
     private ArtifactDAOImpl artifactDAO;
     private boolean isEditing;
@@ -28,9 +30,10 @@ public class MentorController {
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
+        inputService = new InputService();
     }
 
-    public void MenuMentor() {
+    public void MenuMentor() throws Exception {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -69,7 +72,7 @@ public class MentorController {
         }
     }
 
-    public void HandleMenuEditQuest() {
+    public void HandleMenuEditQuest() throws Exception {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -92,7 +95,7 @@ public class MentorController {
         }
     }
 
-    public void HandleMenuEditArtifact() {
+    public void HandleMenuEditArtifact() throws SQLException {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -115,62 +118,65 @@ public class MentorController {
         }
     }
 
-    private void createNewQuest() {
+    private void createNewQuest() throws Exception {
+        int id = 0;
         System.out.println(view.NAME);
-        String name = view.getInput();
+        String name = inputService.getStringInput();
         System.out.println(view.DESCRIPTION);
-        int description = view.getIntInput();
-        System.out.println(view.CATEGORY);
-        String category = view.getInput();
+        String description = inputService.getStringInput();
         System.out.println(view.REWARD);
-        int reward = view.getIntInput();
+        int reward = inputService.getIntInput();
+        System.out.println(view.CATEGORY);
+        int categoryId = inputService.getIntInput();
 
-        questDAO.AddQuest(name, description, category, reward);
+        questDAO.addQuest(new Quest( id, name, description, categoryIdToEnum(categoryId), reward));
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
     }
 
     private void createNewArtifact() {
+        int id = 0;
         System.out.println(view.NAME);
-        String name = view.getInput();
+        String title = inputService.getStringInput();
         System.out.println(view.DESCRIPTION);
-        int description = view.getIntInput();
-        System.out.println(view.REWARD);
-        int reward = view.getIntInput();
+        String description = inputService.getStringInput();
+        System.out.println(view.COST);
+        int cost = inputService.getIntInput();
 
-        artifactDAO.AddArtifact(name, description, reward);
+        artifactDAO.addArtifact(new Artifact(id, title, description, cost));
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
     }
 
     public void removeQuest() {
-        view.displayMessageWithLn("Please enter the ID of the Quest to remove:");
-        int questId = view.getIntInput();
+        inputService.displayMessageWithLn("Please enter the ID of the Quest to remove:");
+        int questId = inputService.getIntInput();
         questDAO.deleteQuest(questId);
         System.out.println("ID: " + questId + ". The product has been removed");
     }
 
     public void removeArtifact() {
-        view.displayMessageWithLn("Please, enter the ID of the Artifact to remove:");
-        int ArtifactId = view.getIntInput();
+        inputService.displayMessageWithLn("Please, enter the ID of the Artifact to remove:");
+        int ArtifactId = inputService.getIntInput();
         artifactDAO.deleteArtifact(ArtifactId);
         System.out.println("ID: " + ArtifactId + ". The product has been removed");
     }
 
-    public void editQuestDetailsMenu() {
+    public void editQuestDetailsMenu() throws Exception {
         System.out.println("\nEDIT QUEST DATA PANEL");
-        view.displayMessageWithLn("Enter a quest Id:");
-        int questId = view.getIntInput();
+        inputService.displayMessageWithLn("Enter a quest Id:");
+        int questId = inputService.getIntInput();
         isEditing = true;
-        view.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n3. Category\n" +
+        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n3. Category\n" +
                 "4. Reward\n5. Exit");
         while (isEditing) {
             editQuest(questId);
         }
     }
 
-    public void editQuest(int questId) throws SQLException {
-        Quest quest = questDAO.getQuest(questId);
+    public void editQuest(int questId) throws Exception {
         QuestDAOImpl questDao = new QuestDAOImpl(postgreSQLJDBC);
-        String newValue;
+        Quest quest = questDAO.getQuest(questId);
+        String newValue = getUserInput();
+        int newValueInt = Integer.valueOf(newValue);
         int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
@@ -188,16 +194,16 @@ public class MentorController {
                 isEditing = false;
                 break;
             case 3:
-//                view.HandleMenuEditCategory();
+                view.HandleMenuEditCategory();
 //                newValue = getUserInput();
-////                int newValueInt = Integer.valueOf(newValue);
-//                quest.setQuestCategoryEnum(newValue);
-//                questDao.editQuest(quest);
-//                isEditing = false;
+//                int newValueInt = Integer.valueOf(newValue);
+                quest.setQuestCategoryEnum(categoryIdToEnum(newValueInt));
+                questDao.editQuest(quest);
+                isEditing = false;
                 break;
             case 4:
-                newValue = getUserInput();
-                int newValueInt = Integer.valueOf(newValue);
+//                newValue = getUserInput();
+//                int newValueInt = Integer.valueOf(newValue);
 //                questDao.editQuest(questId, "Reward", newValue);
                 quest.setReward(newValueInt);
                 questDAO.editQuest(quest);
@@ -261,5 +267,19 @@ public class MentorController {
             default:
                 break;
         }
+    }
+
+    private QuestCategoryEnum categoryIdToEnum(int id) throws Exception {
+        QuestCategoryEnum questCategoryEnum;
+        if (id == 1) {
+            questCategoryEnum = QuestCategoryEnum.EASY;
+        } else if (id == 2) {
+            questCategoryEnum = QuestCategoryEnum.MEDIUM;
+        } else if (id == 3) {
+            questCategoryEnum = QuestCategoryEnum.HARD;
+        } else {
+            throw new Exception("Wrong category id");
+        }
+        return questCategoryEnum;
     }
 }

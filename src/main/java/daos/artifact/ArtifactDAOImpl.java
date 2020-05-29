@@ -20,37 +20,48 @@ public class ArtifactDAOImpl implements ArtifactDAO {
 
     public List<Artifact> getArtifacts() throws SQLException {
         final String SELECT_SQL = "SELECT * FROM \"Artifacts\";";
-
         Statement st = postgreSQLJDBC.getConnection().createStatement();
-
         List<Artifact> artifacts = new ArrayList<>();
-
         try {
             ResultSet rs = st.executeQuery(SELECT_SQL);
             artifacts = createArtifactList(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return artifacts;
     }
 
-
     public Artifact getArtifact(int id) throws SQLException {
         final String SELECT_SQL = "SELECT * FROM \"Artifacts\" WHERE id = '" + id + "';";
-
         Statement st = postgreSQLJDBC.getConnection().createStatement();
-
         List<Artifact> artifacts = new ArrayList<>();
-
         try {
             ResultSet rs = st.executeQuery(SELECT_SQL);
             artifacts = createArtifactList(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return artifacts.get(0);
+    }
+
+    @Override
+    public void addArtifact(Artifact artifact) {
+        final String INSERT_SQL = "INSERT INTO \"Artifacts\" (\"Title\", \"Description\", \"Cost\")" +
+                "VALUES (?, ?, ?);";
+
+        String title = artifact.getTitle();
+        String description = artifact.getDescription();
+        int cost = artifact.getPrice();
+
+        try {
+            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(INSERT_SQL);
+            ps.setString(1, title);
+            ps.setString(2, description);
+            ps.setInt(3, cost);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteArtifact(int id) {
@@ -59,6 +70,24 @@ public class ArtifactDAOImpl implements ArtifactDAO {
         try {
             PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
             ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editArtifact(Artifact artifact) {
+        final String UPDATE_SQL = "UPDATE \"Artifacts\"" +
+                "SET \"Title\" = ?, \"Description\" = ?, \"Cost\" = ?" +
+                "WHERE id = ?;";
+
+        try {
+            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
+            ps.setString(1, artifact.getTitle());
+            ps.setString(2, artifact.getDescription());
+            ps.setInt(3, artifact.getPrice());
+            ps.setInt(4, artifact.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,8 +107,6 @@ public class ArtifactDAOImpl implements ArtifactDAO {
 
             artifacts.add(artifact);
         }
-
         return artifacts;
     }
-
 }
