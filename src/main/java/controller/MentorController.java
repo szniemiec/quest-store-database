@@ -4,10 +4,14 @@ import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
+import enums.QuestCategoryEnum;
+import models.Artifact;
+import models.Quest;
 import models.users.Codecooler;
 
 import view.View;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -163,29 +167,40 @@ public class MentorController {
         }
     }
 
-    public void editQuest(int questId) {
+    public void editQuest(int questId) throws SQLException {
+        Quest quest = questDAO.getQuest(questId);
         QuestDAOImpl questDao = new QuestDAOImpl(postgreSQLJDBC);
         String newValue;
-        int userChoice = view.getIntInput();
+        int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Name", newValue);
+//                questDao.editQuest(questId, "Name", newValue);
+                quest.setName(newValue);
+                questDAO.editQuest(quest);
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Description", newValue);
+//                questDao.editQuest(questId, "Description", newValue);
+                quest.setDescription(newValue);
+                questDAO.editQuest(quest);
                 isEditing = false;
                 break;
             case 3:
-                newValue = getUserInput();
-                questDao.editQuest(questId, "category_id", newValue);
-                isEditing = false;
+//                view.HandleMenuEditCategory();
+//                newValue = getUserInput();
+////                int newValueInt = Integer.valueOf(newValue);
+//                quest.setQuestCategoryEnum(newValue);
+//                questDao.editQuest(quest);
+//                isEditing = false;
                 break;
             case 4:
                 newValue = getUserInput();
-                questDao.editQuest(questId, "Reward", newValue);
+                int newValueInt = Integer.valueOf(newValue);
+//                questDao.editQuest(questId, "Reward", newValue);
+                quest.setReward(newValueInt);
+                questDAO.editQuest(quest);
                 isEditing = false;
                 break;
             case 5:
@@ -198,38 +213,46 @@ public class MentorController {
 
     public String getUserInput() {
         System.out.println("Please, type a new value:");
-        return view.getInput();
+        return inputService.getStringInput();
     }
 
-    public void editArtifactDetailsMenu() {
+    public void editArtifactDetailsMenu() throws SQLException {
         System.out.println("\nEDIT ARTIFACT DATA PANEL");
-        view.displayMessageWithLn("Enter a artifact Id:");
-        int artifactId = view.getIntInput();
+        inputService.displayMessageWithLn("Enter a artifact Id:");
+        int artifactId = inputService.getIntInput();
         isEditing = true;
-        view.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n 3. Reward\n4. Exit");
+        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n 3. Reward\n4. Exit");
         while (isEditing) {
             editArtifact(artifactId);
         }
     }
 
-    public void editArtifact(int artifactId) {
+    public void editArtifact(int artifactId) throws SQLException {
+        Artifact artifact = artifactDAO.getArtifact(artifactId);
         ArtifactDAOImpl artifactDao = new ArtifactDAOImpl(postgreSQLJDBC);
         String newValue;
-        int userChoice = view.getIntInput();
+        int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Title", newValue);
+//                questDao.editQuest(questId, "Name", newValue);
+                artifact.setTitle(newValue);
+                artifactDao.editArtifact(artifact);
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Description", newValue);
+//                artifactDao.editArtifact(artifactId, "Description", newValue);
+                artifact.setDescription(newValue);
+                artifactDao.editArtifact(artifact);
                 isEditing = false;
                 break;
             case 3:
                 newValue = getUserInput();
-                artifactDao.editArtifact(artifactId, "Cost", newValue);
+                int newValueInt = Integer.valueOf(newValue);
+//                artifactDao.editArtifact(artifactId, "Cost", newValue);
+                artifact.setPrice(newValueInt);
+                artifactDao.editArtifact(artifact);
                 isEditing = false;
                 break;
             case 4:
