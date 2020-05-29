@@ -7,6 +7,22 @@ public class Artifact {
     private String description;
     private int price;
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     public Artifact(int id, String title, String description, int price) {
         this.id = id;
         this.title = title;

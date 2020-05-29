@@ -10,6 +10,26 @@ public class Quest {
     private QuestCategoryEnum questCategoryEnum;
     private int reward;
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setQuestCategoryEnum(QuestCategoryEnum questCategoryEnum) {
+        this.questCategoryEnum = questCategoryEnum;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
+    }
+
     public Quest(int id, String name, String description, QuestCategoryEnum questCategoryEnum, int reward) {
         this.id = id;
         this.name = name;
