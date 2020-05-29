@@ -50,4 +50,10 @@ public class View {
                         "\n 2. Delete" +
                         "\n 3. Exit");
     }
+    public void HandleMenuEditCategory(){
+        System.out.println("        Provide new category" +
+                "\n\n 1. Easy" +
+                "\n 2. Medium" +
+                "\n 3. Hard");
+    }
 }
