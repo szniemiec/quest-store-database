@@ -96,12 +96,16 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
 
     private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
         ModuleEnum moduleEnum;
-        switch (moduleId) {
-            case 1 -> moduleEnum = ModuleEnum.PROG_BASICS;
-            case 2 -> moduleEnum = ModuleEnum.JAVA_OOP;
-            case 3 -> moduleEnum = ModuleEnum.WEB;
-            case 4 -> moduleEnum = ModuleEnum.ADVANCED;
-            default -> throw new Exception("Wrong module id");
+        if (moduleId == 1) {
+            moduleEnum = ModuleEnum.PROG_BASICS;
+        } else if (moduleId == 2) {
+            moduleEnum = ModuleEnum.JAVA_OOP;
+        } else if (moduleId == 3) {
+            moduleEnum = ModuleEnum.WEB;
+        } else if (moduleId == 4) {
+            moduleEnum = ModuleEnum.ADVANCED;
+        } else {
+            throw new Exception("Wrong module id");
         }
         return moduleEnum;
     }

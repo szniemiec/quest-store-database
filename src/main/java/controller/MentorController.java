@@ -250,12 +250,16 @@ public class MentorController {
 
     private QuestCategoryEnum categoryIdToEnum(int id) throws Exception {
         QuestCategoryEnum questCategoryEnum;
-        switch (id) {
-            case 1 -> questCategoryEnum = QuestCategoryEnum.EASY;
-            case 2 -> questCategoryEnum = QuestCategoryEnum.MEDIUM;
-            case 3 -> questCategoryEnum = QuestCategoryEnum.HARD;
-            case 4 -> questCategoryEnum = QuestCategoryEnum.SHIRTS;
-            default -> throw new Exception("Wrong category id");
+        if (id == 1) {
+            questCategoryEnum = QuestCategoryEnum.EASY;
+        } else if (id == 2) {
+            questCategoryEnum = QuestCategoryEnum.MEDIUM;
+        } else if (id == 3) {
+            questCategoryEnum = QuestCategoryEnum.HARD;
+        } else if (id == 4) {
+            questCategoryEnum = QuestCategoryEnum.SHIRTS;
+        } else {
+            throw new Exception("Wrong category id");
         }
         return questCategoryEnum;
     }

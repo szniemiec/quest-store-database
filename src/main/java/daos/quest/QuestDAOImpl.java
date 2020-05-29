@@ -132,11 +132,14 @@ public class QuestDAOImpl implements QuestDAO {
 
     private QuestCategoryEnum categoryIdToEnum(int categoryId) throws Exception {
         QuestCategoryEnum questCategoryEnum;
-        switch (categoryId) {
-            case 1 -> questCategoryEnum = QuestCategoryEnum.EASY;
-            case 2 -> questCategoryEnum = QuestCategoryEnum.MEDIUM;
-            case 3 -> questCategoryEnum = QuestCategoryEnum.HARD;
-            default -> throw new Exception("Wrong quest category");
+        if (categoryId == 1) {
+            questCategoryEnum = QuestCategoryEnum.EASY;
+        } else if (categoryId == 2) {
+            questCategoryEnum = QuestCategoryEnum.MEDIUM;
+        } else if (categoryId == 3) {
+            questCategoryEnum = QuestCategoryEnum.HARD;
+        } else {
+            throw new Exception("Wrong quest category");
         }
         return questCategoryEnum;
     }
