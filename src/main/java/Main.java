@@ -10,10 +10,11 @@ public class Main {
         PostgreSQLJDBC database = new PostgreSQLJDBC();
         LoginController loginController = new LoginController();
         DatabaseCredentials credentials = jsonService.readEnviroment();
+
         database.connectToDatabase(credentials);
+        // wpisz to co chcesz wywołać
         loginController.startLogin();
 
         database.disconnectFromDatabase();
-
     }
 }

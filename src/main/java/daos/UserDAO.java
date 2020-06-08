@@ -1,13 +1,10 @@
 package daos;
 
-import daos.codecooler.CodecoolerDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.ModuleEnum;
-import enums.QuestCategoryEnum;
 import enums.RoleEnum;
 import models.Purse;
 import models.users.*;
-import org.postgresql.core.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,7 +18,7 @@ public class UserDAO {
     }
 
     Connection connection;
-    Statement st;
+    Statement statement;
     ResultSet rs;
     User newUser;
 
@@ -38,13 +35,16 @@ public class UserDAO {
         return null;
     }
 
-
     public ResultSet executeQuery(String sql) {
         PostgreSQLJDBC postgreSQLJDBC = new PostgreSQLJDBC();
         connection = postgreSQLJDBC.getConnection();
         try {
-            this.st = this.connection.createStatement();
-            this.rs = this.st.executeQuery(sql);
+            this.statement =
+                    this.connection.
+                    createStatement();
+            this.rs
+                    = this.statement.
+                    executeQuery(sql);
         } catch (SQLException e) {
             System.out.println("Error! Cannot execute query!");
             e.printStackTrace();

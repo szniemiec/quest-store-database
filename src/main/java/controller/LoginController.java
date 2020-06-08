@@ -12,17 +12,16 @@ import java.io.IOException;
 
 public class LoginController {
     UserDAO userDAO;
-    View view = new View();
-    InputService inputService = new InputService();
+    View view;
+    InputService inputService;
     AccountCredentials accountCredentials;
     boolean isRunning;
 
     public LoginController() {
-        UserDAO userDAO = new UserDAO();
+        this.userDAO = new UserDAO();
         isRunning = true;
-        this.inputService = inputService;
-        this.accountCredentials = accountCredentials;
-        this.view = view;
+        this.inputService =  new InputService();
+        this.view = new View();
     }
 
     public void startLogin() throws Exception {
