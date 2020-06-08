@@ -11,6 +11,7 @@ import models.users.Codecooler;
 import services.InputService;
 import view.View;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +29,7 @@ public class MentorController {
     public MentorController() {
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
-        artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
+        artifactDAO = new ArtifactDAOImpl();
         inputService = new InputService();
         artifact = new Artifact();
         quest = new Quest();
@@ -96,7 +97,7 @@ public class MentorController {
         }
     }
 
-    public void HandleMenuEditArtifact() {
+    public void HandleMenuEditArtifact() throws SQLException {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -142,7 +143,7 @@ public class MentorController {
         int cost = inputService.getIntInput();
 
         artifactDAO.addArtifact(new Artifact(title, description, cost));
-        artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
+        artifactDAO = new ArtifactDAOImpl();
     }
 
     public void removeQuest() {
@@ -209,34 +210,38 @@ public class MentorController {
         return inputService.getStringInput();
     }
 
-    public void editArtifactDetailsMenu() {
+    public void editArtifactDetailsMenu() throws SQLException {
         System.out.println("\nEDIT ARTIFACT DATA PANEL");
         inputService.displayMessageWithLn("Enter a artifact Id:");
         int artifactId = inputService.getIntInput();
         isEditing = true;
-        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n 3. Reward\n4. Exit");
         while (isEditing) {
             editArtifact(artifactId);
         }
     }
 
-    public void editArtifact(int artifactId) {
-        ArtifactDAOImpl artifactDao = new ArtifactDAOImpl(postgreSQLJDBC);
+    public void editArtifact(int artifactId) throws SQLException {
+        ArtifactDAOImpl artifactDao = new ArtifactDAOImpl();
         String newValue;
+        Artifact artifact;
+        inputService.displayMessageWithLn("What do you want to edit?\n1. Name\n2. Description\n3. Reward\n4. Exit");
         int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
+                artifact = artifactDao.getArtifact(artifactId);
                 artifactDao.editArtifact(artifact.setTitle(newValue));
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
+                artifact = artifactDao.getArtifact(artifactId);
                 artifactDao.editArtifact(artifact.setDescription(newValue));
                 isEditing = false;
                 break;
             case 3:
                   int newValueInt =  Integer.valueOf(getUserInput());
+                artifact = artifactDao.getArtifact(artifactId);
                 artifactDao.editArtifact(artifact.setCost(newValueInt));
                 isEditing = false;
                 break;
