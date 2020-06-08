@@ -3,35 +3,31 @@ package daos.artifact;
 import database.PostgreSQLJDBC;
 import models.Artifact;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArtifactDAOImpl implements ArtifactDAO {
 
     private PostgreSQLJDBC postgreSQLJDBC;
+    private Connection connection;
 
-    public ArtifactDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
-        this.postgreSQLJDBC = postgreSQLJDBC;
+    public ArtifactDAOImpl() {
+        this.postgreSQLJDBC = new PostgreSQLJDBC();
     }
 
     public List<Artifact> getArtifacts() throws SQLException {
         final String SELECT_SQL = "SELECT * FROM \"Artifacts\";";
-
-        Statement st = postgreSQLJDBC.getConnection().createStatement();
-
         List<Artifact> artifacts = new ArrayList<>();
+        connection = postgreSQLJDBC.getConnection();
 
         try {
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(SELECT_SQL);
             artifacts = createArtifactList(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return artifacts;
     }
 
@@ -39,18 +35,16 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     public Artifact getArtifact(int id) throws SQLException {
         final String SELECT_SQL = "SELECT * FROM \"Artifacts\" WHERE id = '" + id + "';";
 
-        Statement st = postgreSQLJDBC.getConnection().createStatement();
-
-        List<Artifact> artifacts = new ArrayList<>();
-
+        List<Artifact> OneArtifact = new ArrayList<>();
+        connection = postgreSQLJDBC.getConnection();
         try {
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(SELECT_SQL);
-            artifacts = createArtifactList(rs);
+            OneArtifact = createArtifactList(rs);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
-        return artifacts.get(0);
+        return OneArtifact.get(0);
     }
 
     @Override
@@ -90,9 +84,11 @@ public class ArtifactDAOImpl implements ArtifactDAO {
         final String UPDATE_SQL = "UPDATE \"Artifacts\"" +
                 "SET \"Title\" = ?, \"Description\" = ?, \"Cost\" = ?" +
                 "WHERE id = ?;";
+//       PostgreSQLJDBC postgreSQLJDBC = new PostgreSQLJDBC();
+//       connection = postgreSQLJDBC.getConnection();
 
         try {
-            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
+            PreparedStatement ps = postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
             ps.setString(1, artifact.getTitle());
             ps.setString(2, artifact.getDescription());
             ps.setInt(3, artifact.getCost());
