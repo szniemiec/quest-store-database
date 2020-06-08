@@ -259,5 +259,4 @@ public class MentorController {
         }
         return questCategoryEnum;
     }
-
 }

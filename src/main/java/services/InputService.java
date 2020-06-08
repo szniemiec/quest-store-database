@@ -24,4 +24,8 @@ public class InputService {
         System.out.println(text);
     }
 
+    public String stringWithMessage(String message) {
+        System.out.println(message);
+        return scanner.nextLine();
+    }
 }
