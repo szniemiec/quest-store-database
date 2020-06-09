@@ -1,56 +1,42 @@
 package controller;
 
 import daos.UserDAO;
+import database.PostgreSQLJDBC;
 import enums.RoleEnum;
-import models.users.AccountCredentials;
-import models.users.Codecooler;
 import models.users.User;
 import services.InputService;
 import view.View;
 
-import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginController {
+
     UserDAO userDAO;
     View view;
     InputService inputService;
-    AccountCredentials accountCredentials;
     boolean isRunning;
 
-    public LoginController() {
-        this.userDAO = new UserDAO();
-        isRunning = true;
-        this.inputService =  new InputService();
+    public LoginController(PostgreSQLJDBC postgreSQLJDBC) {
+        this.userDAO = new UserDAO(postgreSQLJDBC);
         this.view = new View();
+        this.inputService = new InputService();
+        isRunning = true;
     }
 
     public void startLogin() throws Exception {
         view.clearScreen();
-        loginProcess();
-        menuSwitch();
-
+        User loggingUser = loginProcess();
+        menuSwitch(loggingUser);
     }
 
-    public User loginProcess() throws IOException {
+    public User loginProcess() throws SQLException {
         String login = getLoginFromUser();
         String password = getPasswordFromUser();
         User loggingUser = userDAO.getLoggedUser(login, password);
         return loggingUser;
     }
 
-    private String getLoginFromUser() {
-        return inputService.stringWithMessage("Insert login: ");
-    }
-
-    private String getPasswordFromUser() {
-        return inputService.stringWithMessage("Insert password: ");
-    }
-
-    public void menuSwitch() throws Exception {
-        String login = getLoginFromUser();
-        String password = getPasswordFromUser();
-        User loggingUser = userDAO.getLoggedUser(login, password);
-//        RoleEnum roleEnum = accountCredentials.getRoleEnum();
+    public void menuSwitch(User loggingUser) throws Exception {
         RoleEnum roleEnum = loggingUser.getAccountCredentials().getRoleEnum();
         switch (roleEnum) {
             case CREEP:
@@ -66,5 +52,13 @@ public class LoginController {
 //                codecoolerController.menuCodecooler();
                 break;
         }
+    }
+
+    private String getLoginFromUser() {
+        return inputService.stringWithMessage("Insert login: ");
+    }
+
+    private String getPasswordFromUser() {
+        return inputService.stringWithMessage("Insert password: ");
     }
 }

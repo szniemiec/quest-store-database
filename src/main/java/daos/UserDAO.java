@@ -6,60 +6,36 @@ import enums.RoleEnum;
 import models.Purse;
 import models.users.*;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserDAO {
+    private PostgreSQLJDBC postgreSQLJDBC;
 
-    public UserDAO() {
-
+    public UserDAO(PostgreSQLJDBC postgreSQLJDBC) {
+        this.postgreSQLJDBC = postgreSQLJDBC;
     }
 
-    Connection connection;
-    Statement statement;
-    ResultSet rs;
     User newUser;
 
-    public User getLoggedUser(String login, String password) {
+    public User getLoggedUser(String login, String password) throws SQLException {
+        Statement st = postgreSQLJDBC.getConnection().createStatement();
 
         try {
-            ResultSet rs;
-            rs = executeQuery("SELECT * FROM \"Users\" WHERE \"login\" = '" + login + "' AND \"password\" = '" + password + "';");
-            createUser(rs);
+            ResultSet result = st.executeQuery("SELECT * FROM \"Users\" WHERE \"login\" = '" + login + "' AND \"password\" = '" + password + "';");
+            newUser = createUser(result);
         } catch (Exception e) {
-            System.out.println("User not found. Try again!");
             e.printStackTrace();
         }
-        return null;
-    }
-
-    public ResultSet executeQuery(String sql) {
-        PostgreSQLJDBC postgreSQLJDBC = new PostgreSQLJDBC();
-        connection = postgreSQLJDBC.getConnection();
-        try {
-            this.statement =
-                    this.connection.
-                    createStatement();
-            this.rs
-                    = this.statement.
-                    executeQuery(sql);
-        } catch (SQLException e) {
-            System.out.println("Error! Cannot execute query!");
-            e.printStackTrace();
-        }
-        return this.rs;
+        return newUser;
     }
 
     private User createUser(ResultSet result) throws Exception {
-
+        result.next();
         int roleId = result.getInt("role_id");
-
         switch (roleId) {
-
             case 1:
-                result.next();
                 int id = result.getInt("id");
                 String login = result.getString("login");
                 String password = result.getString("password");
@@ -71,35 +47,34 @@ public class UserDAO {
                 accountCredentials.setLogin(login);
                 accountCredentials.setPassword(password);
                 accountCredentials.setEmail(email);
-//                User newUser;
+
                 newUser = new Creep(id, accountCredentials, firstName, lastName);
                 newUser.setId(id);
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
-//                return newUser;
                 break;
+
             case 2:
-                result.next();
                 id = result.getInt("id");
                 login = result.getString("login");
                 password = result.getString("password");
                 email = result.getString("email");
                 firstName = result.getString("first_name");
                 lastName = result.getString("last_name");
+                roleId = result.getInt("role_id");
 
-                accountCredentials = new AccountCredentials(login, password, email, roleToEnum(id));
+                accountCredentials = new AccountCredentials(login, password, email, roleToEnum(roleId));
                 accountCredentials.setLogin(login);
                 accountCredentials.setPassword(password);
                 accountCredentials.setEmail(email);
-//                    User newUser;
+
                 newUser = new Mentor(id, accountCredentials, firstName, lastName);
                 newUser.setId(id);
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
-//                return newUser;
-            break;
+                break;
+
             case 3:
-                result.next();
                 id = result.getInt("id");
                 login = result.getString("login");
                 password = result.getString("password");
@@ -109,7 +84,7 @@ public class UserDAO {
                 int moduleId = result.getInt("module_id");
                 int coins = result.getInt("coins");
 
-                accountCredentials = new AccountCredentials(login, password, email, roleToEnum(id));
+                accountCredentials = new AccountCredentials(login, password, email, roleToEnum(roleId));
                 accountCredentials.setLogin(login);
                 accountCredentials.setPassword(password);
                 accountCredentials.setEmail(email);
@@ -119,15 +94,14 @@ public class UserDAO {
                 newUser.setId(id);
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
-//                return newUser;
-            break;
+                break;
         }
         return newUser;
     }
 
-    private RoleEnum roleToEnum(int id) throws Exception {
+    private RoleEnum roleToEnum(int roleid) throws Exception {
         RoleEnum roleEnum;
-        switch (id) {
+        switch (roleid) {
             case 1 -> roleEnum = RoleEnum.CREEP;
             case 2 -> roleEnum = RoleEnum.MENTOR;
             case 3 -> roleEnum = RoleEnum.CODECOOLER;

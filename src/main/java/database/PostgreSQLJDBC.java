@@ -9,10 +9,10 @@ public class PostgreSQLJDBC {
     private Connection c;
 
     public PostgreSQLJDBC() {
-        c = null;
+        this.c = null;
     }
 
-    public void connectToDatabase(DatabaseCredentials databaseCredentials) {
+    public Connection connectToDatabase(DatabaseCredentials databaseCredentials) {
         String HOST = databaseCredentials.getHost();
         String PORT = databaseCredentials.getPort();
         String DATABASE = databaseCredentials.getDatabase();
@@ -27,6 +27,8 @@ public class PostgreSQLJDBC {
             System.exit(0);
         }
         System.out.println("Opened database successfully");
+        return c;
+
     }
 
     public void disconnectFromDatabase() throws SQLException {
