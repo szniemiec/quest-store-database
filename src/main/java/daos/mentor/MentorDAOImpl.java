@@ -16,7 +16,6 @@ public class MentorDAOImpl implements MentorDAO {
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet result;
 
-
     public MentorDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
     }
@@ -26,7 +25,8 @@ public class MentorDAOImpl implements MentorDAO {
         List<Mentor> mentors = new ArrayList<>();
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
-            mentors = addMentorToList(result);
+            Mentor mentor = createMentor(result);
+            mentors = addMentorToList(mentor);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -38,8 +38,15 @@ public class MentorDAOImpl implements MentorDAO {
 
     }
 
-    private List<Mentor> addMentorToList(ResultSet result) throws Exception {
+    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
         List<Mentor> mentors = new ArrayList<>();
+        mentor = createMentor(result);
+        mentors.add(mentor);
+
+        return mentors;
+    }
+
+    private Mentor createMentor(ResultSet result) throws Exception {
 
         while (result.next()) {
             int id = result.getInt("id");
@@ -50,10 +57,9 @@ public class MentorDAOImpl implements MentorDAO {
             String lastName = result.getString("last_name");
 
             AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
-            Mentor mentor = new Mentor(id, accountCredentials, firstName, lastName);
-            mentors.add(mentor);
+            return new Mentor(id, accountCredentials, firstName, lastName);
         }
-        return mentors;
+        return null;
     }
 
     @Override

@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MentorController {
+    public  InputService inputService;
     private Artifact artifact;
     private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
-    private InputService inputService;
     private QuestDAOImpl questDAO;
     private ArtifactDAOImpl artifactDAO;
     private boolean isEditing;

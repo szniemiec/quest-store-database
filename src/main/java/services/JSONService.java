@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 public class JSONService {
 
     public DatabaseCredentials readEnviroment() {
+
         try {
             Gson gson = new Gson();
 
@@ -18,7 +19,6 @@ public class JSONService {
             DatabaseCredentials credentials = gson.fromJson(reader, DatabaseCredentials.class);
 
             reader.close();
-
             return credentials;
 
         } catch (Exception ex) {
