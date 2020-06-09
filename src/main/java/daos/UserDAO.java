@@ -6,6 +6,7 @@ import enums.RoleEnum;
 import models.Purse;
 import models.users.*;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,20 +14,22 @@ import java.sql.Statement;
 
 public class UserDAO {
 
-    public UserDAO() {
+    private PostgreSQLJDBC postgreSQLJDBC;
 
+    public UserDAO(PostgreSQLJDBC postgreSQLJDBC) {
+        this.postgreSQLJDBC = postgreSQLJDBC;
     }
 
-    Connection connection;
-    Statement statement;
-    ResultSet rs;
     User newUser;
+    ResultSet rs;
+    Statement st;
+    Connection c;
 
-    public User getLoggedUser(String login, String password) {
+    public User getLoggedUser(String login, String password) throws SQLException {
+        Statement st = postgreSQLJDBC.getConnection().createStatement();
 
         try {
-            ResultSet rs;
-            rs = executeQuery("SELECT * FROM \"Users\" WHERE \"login\" = '" + login + "' AND \"password\" = '" + password + "';");
+            ResultSet rs = st.executeQuery("SELECT * FROM \"Users\" WHERE login = '" + login + "' AND password = '" + password + "';");
             createUser(rs);
         } catch (Exception e) {
             System.out.println("User not found. Try again!");
@@ -37,14 +40,13 @@ public class UserDAO {
 
     public ResultSet executeQuery(String sql) {
         PostgreSQLJDBC postgreSQLJDBC = new PostgreSQLJDBC();
-        connection = postgreSQLJDBC.getConnection();
+        Connection connection = postgreSQLJDBC.getConnection();
         try {
-            this.statement =
-                    this.connection.
-                    createStatement();
-            this.rs
-                    = this.statement.
-                    executeQuery(sql);
+            this.st =
+                    postgreSQLJDBC.getConnection().createStatement();
+            ResultSet rs
+                    = this.st.executeQuery(sql);
+            return rs;
         } catch (SQLException e) {
             System.out.println("Error! Cannot execute query!");
             e.printStackTrace();
@@ -97,7 +99,7 @@ public class UserDAO {
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
 //                return newUser;
-            break;
+                break;
             case 3:
                 result.next();
                 id = result.getInt("id");
@@ -120,7 +122,7 @@ public class UserDAO {
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
 //                return newUser;
-            break;
+                break;
         }
         return newUser;
     }

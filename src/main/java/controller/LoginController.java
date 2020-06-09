@@ -1,6 +1,7 @@
 package controller;
 
 import daos.UserDAO;
+import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
@@ -9,6 +10,7 @@ import services.InputService;
 import view.View;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginController {
     UserDAO userDAO;
@@ -17,8 +19,8 @@ public class LoginController {
     AccountCredentials accountCredentials;
     boolean isRunning;
 
-    public LoginController() {
-        this.userDAO = new UserDAO();
+    public LoginController(PostgreSQLJDBC postgreSQLJDBC) {
+        this.userDAO = new UserDAO(postgreSQLJDBC);
         isRunning = true;
         this.inputService =  new InputService();
         this.view = new View();
@@ -31,7 +33,7 @@ public class LoginController {
 
     }
 
-    public User loginProcess() throws IOException {
+    public User loginProcess() throws IOException, SQLException {
         String login = getLoginFromUser();
         String password = getPasswordFromUser();
         User loggingUser = userDAO.getLoggedUser(login, password);
