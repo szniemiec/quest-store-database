@@ -5,10 +5,7 @@ import enums.RoleEnum;
 import models.users.AccountCredentials;
 import models.users.Mentor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +18,13 @@ public class MentorDAOImpl implements MentorDAO {
     }
 
     public List<Mentor> getMentors() throws Exception {
-        Statement statement = postgreSQLJDBC.getConnection().createStatement();
         List<Mentor> mentors = new ArrayList<>();
+        Connection c = postgreSQLJDBC.getConnection();
+        Statement statement = c.createStatement();
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
             Mentor mentor = createMentor(result);
-            mentors = addMentorToList(mentor);
+            mentors = addMentorToList();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -38,9 +36,9 @@ public class MentorDAOImpl implements MentorDAO {
 
     }
 
-    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
+    private List<Mentor> addMentorToList() throws Exception {
         List<Mentor> mentors = new ArrayList<>();
-        mentor = createMentor(result);
+        Mentor mentor = createMentor(result);
         mentors.add(mentor);
 
         return mentors;
