@@ -1,20 +1,28 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
+import daos.mentor.MentorDAO;
+import daos.mentor.MentorDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.QuestCategoryEnum;
 import models.Artifact;
 import models.Quest;
 import models.users.Codecooler;
+import models.users.Mentor;
 import services.InputService;
 import view.View;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Scanner;
 
-public class MentorController {
+public class MentorController implements HttpHandler {
     public  InputService inputService;
     private Artifact artifact;
     private Quest quest;
@@ -128,9 +136,9 @@ public class MentorController {
         int reward = inputService.getIntInput();
         System.out.println(view.CATEGORY);
         int categoryId = inputService.getIntInput();
-
-        questDAO.addQuest(new Quest(name, description, reward, categoryIdToEnum(categoryId)));
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
+        questDAO.addQuest(new Quest(name, description, reward, categoryIdToEnum(categoryId)));
+
     }
 
     private void createNewArtifact() {
@@ -260,4 +268,22 @@ public class MentorController {
         return questCategoryEnum;
     }
 
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        MentorDAOImpl mentorDAOImpl = new MentorDAOImpl(postgreSQLJDBC);
+
+        try {
+            List<Mentor> mentors = mentorDAOImpl.getMentors();
+            ObjectMapper mapper = new ObjectMapper();
+            String response = mapper.writeValueAsString(mentors);
+            System.out.println(response);
+
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
