@@ -29,3 +29,16 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
         }
         return codecoolers;
     }
+    @Override
+    public Codecooler getCodecooler(int id) throws SQLException {
+        final String SELECT_SQL = "SELECT * FROM \"Users\" WHERE id = " + id + ";";
+        Statement st = postgreSQLJDBC.getConnection().createStatement();
+        List<Codecooler> codecoolers = new ArrayList<>();
+        try {
+            ResultSet rs = st.executeQuery(SELECT_SQL);
+            codecoolers = createCodecoolerList(rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return codecoolers.get(0);
+    }
