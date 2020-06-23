@@ -16,3 +16,16 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
     public CodecoolerDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
     }
+    @Override
+    public List<Codecooler> getCodecoolers() throws SQLException {
+        final String SELECT_SQL = "SELECT * FROM \"Users\" WHERE role_id = 3;";
+        Statement st = postgreSQLJDBC.getConnection().createStatement();
+        List<Codecooler> codecoolers = new ArrayList<>();
+        try {
+            ResultSet rs = st.executeQuery(SELECT_SQL);
+            codecoolers = createCodecoolerList(rs);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return codecoolers;
+    }
