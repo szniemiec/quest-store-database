@@ -42,3 +42,45 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
         }
         return codecoolers.get(0);
     }
+    @Override
+    public void deleteCodecooler(int id) {
+        final String DELETE_SQL = "DELETE FROM \"Categories\" WHERE id = ?;";
+        try {
+            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(DELETE_SQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private List<Codecooler> createCodecoolerList(ResultSet rs) throws Exception {
+        List<Codecooler> codecoolers = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String login = rs.getString("login");
+            String password = rs.getString("password");
+            String email = rs.getString("email");
+            String firstname = rs.getString("first_name");
+            String lastname = rs.getString("last_name");
+            int moduleId = rs.getInt("module_id");
+            ModuleEnum moduleEnum = moduleIdToEnum(moduleId);
+            int coins = rs.getInt("coins");
+            Purse purse = new Purse(coins);
+            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.CODECOOLER);
+            Codecooler codecooler = new Codecooler(id, accountCredentials, firstname, lastname, moduleEnum, purse);
+            codecoolers.add(codecooler);
+        }
+        return codecoolers;
+    }
+    private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
+        ModuleEnum moduleEnum;
+        switch (moduleId) {
+            case 1 -> moduleEnum = ModuleEnum.PROG_BASICS;
+            case 2 -> moduleEnum = ModuleEnum.JAVA_OOP;
+            case 3 -> moduleEnum = ModuleEnum.WEB;
+            case 4 -> moduleEnum = ModuleEnum.ADVANCED;
+            default -> throw new Exception("Wrong module id");
+        }
+        return moduleEnum;
+    }
+}
