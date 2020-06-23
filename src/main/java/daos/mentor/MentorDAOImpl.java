@@ -24,7 +24,7 @@ public class MentorDAOImpl implements MentorDAO {
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
             Mentor mentor = createMentor(result);
-            mentors = addMentorToList();
+            mentors = addMentorToList(mentor);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -36,9 +36,9 @@ public class MentorDAOImpl implements MentorDAO {
 
     }
 
-    private List<Mentor> addMentorToList() throws Exception {
+    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
         List<Mentor> mentors = new ArrayList<>();
-        Mentor mentor = createMentor(result);
+        mentor = createMentor(result);
         mentors.add(mentor);
 
         return mentors;

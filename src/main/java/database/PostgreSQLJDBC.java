@@ -6,11 +6,10 @@ import java.sql.SQLException;
 
 public class PostgreSQLJDBC {
 
-    private Connection c;
-
     public PostgreSQLJDBC() {
-        this.c = null;
     }
+
+    Connection c;
 
     public Connection connectToDatabase(DatabaseCredentials databaseCredentials) {
         String HOST = databaseCredentials.getHost();
@@ -20,6 +19,7 @@ public class PostgreSQLJDBC {
         String PASSWORD = databaseCredentials.getPassword();
 
         try {
+
             c = DriverManager.getConnection("jdbc:postgresql://" + HOST + ":" + PORT + "/" + DATABASE, LOGIN, PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,14 +27,16 @@ public class PostgreSQLJDBC {
             System.exit(0);
         }
         System.out.println("Opened database successfully");
-        return c;
 
+        return c;
     }
 
     public void disconnectFromDatabase() throws SQLException {
         this.c.close();
     }
+
     public Connection getConnection() {
+        System.out.println("test");
         return c;
     }
 }

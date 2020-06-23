@@ -10,13 +10,14 @@ import view.View;
 import java.sql.SQLException;
 
 public class LoginController {
-
+    PostgreSQLJDBC postgreSQLJDBC;
     UserDAO userDAO;
     View view;
     InputService inputService;
     boolean isRunning;
 
     public LoginController(PostgreSQLJDBC postgreSQLJDBC) {
+       this.postgreSQLJDBC = postgreSQLJDBC;
         this.userDAO = new UserDAO(postgreSQLJDBC);
         this.view = new View();
         this.inputService = new InputService();
@@ -44,7 +45,7 @@ public class LoginController {
 //                creepController.menuCreep();
                 break;
             case MENTOR:
-                MentorController mentorController = new MentorController();
+                MentorController mentorController = new MentorController(postgreSQLJDBC);
                 mentorController.MenuMentor();
                 break;
             case CODECOOLER:
