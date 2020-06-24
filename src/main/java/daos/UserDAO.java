@@ -1,5 +1,6 @@
 package daos;
 
+import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import enums.ModuleEnum;
 import enums.RoleEnum;

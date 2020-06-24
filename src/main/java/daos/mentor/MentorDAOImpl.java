@@ -23,8 +23,11 @@ public class MentorDAOImpl implements MentorDAO {
         Statement statement = c.createStatement();
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
-            Mentor mentor = createMentor(result);
-            mentors = addMentorToList(mentor);
+           while(result.next()) {
+               Mentor mentor = createMentor(result);
+               mentors.add(mentor);
+           }
+//            mentors = addMentorToList(mentor);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -36,17 +39,15 @@ public class MentorDAOImpl implements MentorDAO {
 
     }
 
-    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
-        List<Mentor> mentors = new ArrayList<>();
-        mentor = createMentor(result);
-        mentors.add(mentor);
-
-        return mentors;
-    }
+//    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
+//        List<Mentor> mentors = new ArrayList<>();
+//        mentor = createMentor(result);
+//        mentors.add(mentor);
+//
+//        return mentors;
+//    }
 
     private Mentor createMentor(ResultSet result) throws Exception {
-
-        while (result.next()) {
             int id = result.getInt("id");
             String login = result.getString("login");
             String password = result.getString("password");
@@ -56,8 +57,6 @@ public class MentorDAOImpl implements MentorDAO {
 
             AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
             return new Mentor(id, accountCredentials, firstName, lastName);
-        }
-        return null;
     }
 
     @Override
