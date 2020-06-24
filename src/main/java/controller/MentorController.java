@@ -29,6 +29,7 @@ public class MentorController implements HttpHandler {
     private Artifact artifact;
     private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
+    private MentorDAOImpl mentorDAO;
     private QuestDAOImpl questDAO;
     private ArtifactDAOImpl artifactDAO;
     private boolean isEditing;
@@ -39,6 +40,7 @@ public class MentorController implements HttpHandler {
         this.postgreSQLJDBC = postgreSQLJDBC;
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
+        mentorDAO = new MentorDAOImpl(postgreSQLJDBC);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
         inputService = new InputService();
         artifact = new Artifact();
@@ -281,24 +283,25 @@ public class MentorController implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        MentorDAOImpl mentorDAOImpl = new MentorDAOImpl(postgreSQLJDBC);
+        String response = "";
 
         try {
-            List<Mentor> mentors = mentorDAOImpl.getMentors();
+            List<Mentor> mentors = this.mentorDAO.getMentors();
             //tworzenie jsona
+            // response to to co sie poazuje na localost w przegladarce
             ObjectMapper mapper = new ObjectMapper();
-            String response = mapper.writeValueAsString(mentors);
+            response = mapper.writeValueAsString(mentors);
             System.out.println(response);
-            //
+
             exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
             //CORS policy * - zezwolenie na komunikacje z kazdym frontem
             exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
             exchange.sendResponseHeaders(200, response.length());
+        }catch (Exception e) {
+            exchange.sendResponseHeaders(404, response.length());
+    }
             OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
+            os.write(response.getBytes(),0,response.length());
             os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
