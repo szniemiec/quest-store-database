@@ -296,12 +296,12 @@ public class MentorController implements HttpHandler {
             exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
             //CORS policy * - zezwolenie na komunikacje z kazdym frontem
             exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
-            exchange.sendResponseHeaders(200, response.length());
+            exchange.sendResponseHeaders(200, response.getBytes().length);
         }catch (Exception e) {
             exchange.sendResponseHeaders(404, response.length());
     }
             OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes(),0,response.length());
+            os.write(response.getBytes());
             os.close();
     }
 }
