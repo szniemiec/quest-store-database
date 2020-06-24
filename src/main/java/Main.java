@@ -18,7 +18,7 @@ public class Main {
 
         LoginController loginController = new LoginController(database);
         // wpisz to co chcesz wywołać
-        loginController.startLogin();
+//        loginController.startLogin();
 
 //        database.disconnectFromDatabase();
     }
