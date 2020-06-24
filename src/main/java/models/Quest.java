@@ -51,22 +51,22 @@ public class Quest {
     }
 
     public Quest setName(String newValue) {
-        this.name = name;
-        return null;
+        this.name = newValue;
+        return this;
     }
 
     public Quest setDescription(String newValue) {
-        this.description = description;
-        return null;
+        this.description = newValue;
+        return this;
     }
 
-    public Quest setCategory(String newValue) {
-        this.questCategoryEnum = questCategoryEnum;
-        return  null;
+    public Quest setCategory(QuestCategoryEnum newValue) {
+        this.questCategoryEnum = newValue;
+        return this;
     }
 
-    public Quest setReward(String newValue) {
-        this.reward = reward;
-        return null;
+    public Quest setReward(int newValue) {
+        this.reward = newValue;
+        return this;
     }
 }

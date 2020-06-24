@@ -15,6 +15,6 @@ public interface QuestDAO {
 
     public void deleteQuest(int id);
 
-    public void editQuest(Quest quest);
+    public void editQuest(Quest quest) throws SQLException;
 
 }

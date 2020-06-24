@@ -4,10 +4,7 @@ import database.PostgreSQLJDBC;
 import enums.QuestCategoryEnum;
 import models.Quest;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,10 +62,10 @@ public class QuestDAOImpl implements QuestDAO {
         int reward = quest.getReward();
         QuestCategoryEnum questCategoryEnum = quest.getQuestCategoryEnum();
 
-        PreparedStatement ps = null;
+        try (Connection c = postgreSQLJDBC.getConnection()) {
+            PreparedStatement ps = null;
+            ps = c.prepareStatement(INSERT_SQL);
 
-        try {
-            ps = this.postgreSQLJDBC.getConnection().prepareStatement(INSERT_SQL);
             ps.setString(1, name);
             ps.setString(2, description);
             ps.setInt(3, reward);
@@ -93,19 +90,20 @@ public class QuestDAOImpl implements QuestDAO {
     }
 
     @Override
-    public void editQuest(Quest quest) {
+    public void editQuest(Quest quest) throws SQLException {
         final String UPDATE_SQL = "UPDATE \"Quests\"" +
                 "SET \"Name\" = ?, \"Description\" = ?, \"Reward\" = ?, category_id = ?" +
                 "WHERE id = ?;";
 
         try {
-            PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
+            PreparedStatement ps = postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
             ps.setString(1, quest.getName());
             ps.setString(2, quest.getDescription());
             ps.setInt(3, quest.getReward());
             ps.setInt(4, quest.getQuestCategoryEnum().getCategoryId());
             ps.setInt(5, quest.getId());
             ps.executeUpdate();
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,33 +1,46 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
+import daos.mentor.MentorDAO;
+import daos.mentor.MentorDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.QuestCategoryEnum;
 import models.Artifact;
 import models.Quest;
 import models.users.Codecooler;
+import models.users.Mentor;
 import services.InputService;
 import view.View;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class MentorController {
+public class MentorController implements HttpHandler {
     public  InputService inputService;
     private Artifact artifact;
     private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
+    private MentorDAOImpl mentorDAO;
     private QuestDAOImpl questDAO;
     private ArtifactDAOImpl artifactDAO;
     private boolean isEditing;
     public View view;
     public List<Codecooler> codecoolers;
 
-    public MentorController() {
+    public MentorController(PostgreSQLJDBC postgreSQLJDBC) {
+        this.postgreSQLJDBC = postgreSQLJDBC;
         view = new View();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
+        mentorDAO = new MentorDAOImpl(postgreSQLJDBC);
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
         inputService = new InputService();
         artifact = new Artifact();
@@ -73,7 +86,7 @@ public class MentorController {
         }
     }
 
-    public void HandleMenuEditQuest() {
+    public void HandleMenuEditQuest() throws Exception {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -128,9 +141,9 @@ public class MentorController {
         int reward = inputService.getIntInput();
         System.out.println(view.CATEGORY);
         int categoryId = inputService.getIntInput();
-
-        questDAO.addQuest(new Quest(name, description, reward, categoryIdToEnum(categoryId)));
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
+        questDAO.addQuest(new Quest(name, description, reward, categoryIdToEnum(categoryId)));
+
     }
 
     private void createNewArtifact() {
@@ -159,7 +172,7 @@ public class MentorController {
         System.out.println("ID: " + ArtifactId + ". The product has been removed");
     }
 
-    public void editQuestDetailsMenu() {
+    public void editQuestDetailsMenu() throws Exception {
         System.out.println("\nEDIT QUEST DATA PANEL");
         inputService.displayMessageWithLn("Enter a quest Id:");
         int questId = inputService.getIntInput();
@@ -171,29 +184,33 @@ public class MentorController {
         }
     }
 
-    public void editQuest(int questId) {
+    public void editQuest(int questId) throws Exception {
         QuestDAOImpl questDao = new QuestDAOImpl(postgreSQLJDBC);
+        Quest editedQuest = questDao.getQuest(questId);
         String newValue;
+        int newValueInt;
         int userChoice = inputService.getIntInput();
         switch (userChoice) {
             case 1:
                 newValue = getUserInput();
-                questDao.editQuest(quest.setName(newValue));
+                questDao.editQuest(editedQuest.setName(newValue));
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
-                questDao.editQuest(quest.setDescription(newValue));
+                questDao.editQuest(editedQuest.setDescription(newValue));
                 isEditing = false;
                 break;
             case 3:
-                newValue = getUserInput();
-                questDao.editQuest(quest.setCategory(newValue));
+                QuestCategoryEnum value;
+                newValueInt = getUserIntInput();
+                value = categoryIdToEnum(newValueInt);
+                questDao.editQuest(editedQuest.setCategory(value));
                 isEditing = false;
                 break;
             case 4:
-                newValue = getUserInput();
-                questDao.editQuest(quest.setReward(newValue));
+                newValueInt = getUserIntInput();
+                questDao.editQuest(editedQuest.setReward(newValueInt));
                 isEditing = false;
                 break;
             case 5:
@@ -207,6 +224,10 @@ public class MentorController {
     public String getUserInput() {
         System.out.println("Please, type a new value:");
         return inputService.getStringInput();
+    }
+    public int getUserIntInput(){
+        System.out.println("Please, type a new value:");
+        return inputService.getIntInput();
     }
 
     public void editArtifactDetailsMenu() {
@@ -260,4 +281,27 @@ public class MentorController {
         return questCategoryEnum;
     }
 
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        String response = "";
+
+        try {
+            List<Mentor> mentors = this.mentorDAO.getMentors();
+            //tworzenie jsona
+            // response to to co sie poazuje na localost w przegladarce
+            ObjectMapper mapper = new ObjectMapper();
+            response = mapper.writeValueAsString(mentors);
+            System.out.println(response);
+
+            exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
+            //CORS policy * - zezwolenie na komunikacje z kazdym frontem
+            exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
+            exchange.sendResponseHeaders(200, response.length());
+        }catch (Exception e) {
+            exchange.sendResponseHeaders(404, response.length());
+    }
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes(),0,response.length());
+            os.close();
+    }
 }
