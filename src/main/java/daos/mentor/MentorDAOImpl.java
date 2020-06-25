@@ -3,6 +3,7 @@ package daos.mentor;
 import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import models.users.AccountCredentials;
+
 import models.users.Mentor;
 
 import java.sql.*;
@@ -47,7 +48,7 @@ public class MentorDAOImpl implements MentorDAO {
         String lastName = result.getString("last_name");
 
         AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
-        return new Mentor(id, accountCredentials, firstName, lastName);
+        return new Mentor(id, accountCredentials,firstName, lastName);
     }
 
     @Override
@@ -72,6 +73,25 @@ public class MentorDAOImpl implements MentorDAO {
             preparedStatement.setString(2, newValue);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setMentor (Object t, AccountCredentials accountCredentials) {
+        Connection c = postgreSQLJDBC.getConnection();
+        Mentor mentor = (Mentor) t;
+        int coins = 0;
+        final String QUERY_SQL = "INSERT INTO \"Users\" (login, password, email, role_id, first_name, last_name) " +
+                "VALUES (?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = c.prepareStatement(QUERY_SQL);
+            ps.setString(1, accountCredentials.getLogin());
+            ps.setString(2, accountCredentials.getPassword());
+            ps.setString(3, accountCredentials.getEmail());
+            ps.setInt(4, 2);
+            ps.setString(5, mentor.getFirstName());
+            ps.setString(6, mentor.getLastName());
+            ps.executeUpdate();
+        }catch (SQLException e){
             e.printStackTrace();
         }
     }
