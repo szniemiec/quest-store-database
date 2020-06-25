@@ -23,11 +23,10 @@ public class MentorDAOImpl implements MentorDAO {
         Statement statement = c.createStatement();
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
-           while(result.next()) {
-               Mentor mentor = createMentor(result);
-               mentors.add(mentor);
-           }
-//            mentors = addMentorToList(mentor);
+            while (result.next()) {
+                Mentor mentor = createMentor(result);
+                mentors.add(mentor);
+            }
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -39,24 +38,16 @@ public class MentorDAOImpl implements MentorDAO {
 
     }
 
-//    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
-//        List<Mentor> mentors = new ArrayList<>();
-//        mentor = createMentor(result);
-//        mentors.add(mentor);
-//
-//        return mentors;
-//    }
-
     private Mentor createMentor(ResultSet result) throws Exception {
-            int id = result.getInt("id");
-            String login = result.getString("login");
-            String password = result.getString("password");
-            String email = result.getString("email");
-            String firstName = result.getString("first_name");
-            String lastName = result.getString("last_name");
+        int id = result.getInt("id");
+        String login = result.getString("login");
+        String password = result.getString("password");
+        String email = result.getString("email");
+        String firstName = result.getString("first_name");
+        String lastName = result.getString("last_name");
 
-            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
-            return new Mentor(id, accountCredentials, firstName, lastName);
+        AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
+        return new Mentor(id, accountCredentials, firstName, lastName);
     }
 
     @Override
