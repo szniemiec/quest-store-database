@@ -7,10 +7,8 @@ import models.Purse;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
 import models.users.Mentor;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +22,16 @@ public class CreepDAOImpl implements CreepDAO {
 
 
     public List<Mentor> getMentors() throws Exception {
-        Statement statement = postgreSQLJDBC.getConnection().createStatement();
         List<Mentor> mentors = new ArrayList<>();
+        Connection c = postgreSQLJDBC.getConnection();
+        Statement statement = c.createStatement();
         try {
             result = statement.executeQuery("SELECT * FROM \"Users\" WHERE role_id = 2");
-            Mentor mentor = createMentor(result);
-            mentors = addMentorToList(mentor);
+            while(result.next()) {
+                Mentor mentor = createMentor(result);
+                mentors.add(mentor);
+            }
+//            mentors = addMentorToList(mentor);
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -39,29 +41,26 @@ public class CreepDAOImpl implements CreepDAO {
     public void getMentor(int id) {
 
     }
-    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
-        List<Mentor> mentors = new ArrayList<>();
-        mentor = createMentor(result);
-        mentors.add(mentor);
 
-        return mentors;
-    }
-
+    //    private List<Mentor> addMentorToList(Mentor mentor) throws Exception {
+//        List<Mentor> mentors = new ArrayList<>();
+//        mentor = createMentor(result);
+//        mentors.add(mentor);
+//
+//        return mentors;
+//    }
     private Mentor createMentor(ResultSet result) throws Exception {
+        int id = result.getInt("id");
+        String login = result.getString("login");
+        String password = result.getString("password");
+        String email = result.getString("email");
+        String firstName = result.getString("first_name");
+        String lastName = result.getString("last_name");
 
-        while (result.next()) {
-            int id = result.getInt("id");
-            String login = result.getString("login");
-            String password = result.getString("password");
-            String email = result.getString("email");
-            String firstName = result.getString("first_name");
-            String lastName = result.getString("last_name");
-
-            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
-            return new Mentor(id, accountCredentials, firstName, lastName);
-        }
-        return null;
+        AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
+        return new Mentor(id, accountCredentials, firstName, lastName);
     }
+
 
     @Override
     public void deleteMentor(int id) {
