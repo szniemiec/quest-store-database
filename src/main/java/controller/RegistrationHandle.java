@@ -1,7 +1,11 @@
 package controller;
 
+import com.fasterxml.jackson.databind.node.POJONode;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import daos.UserDAO;
+import daos.codecooler.CodecoolerDAOImpl;
+import database.PostgreSQLJDBC;
 import enums.ModuleEnum;
 import enums.RoleEnum;
 import helpers.Parser;
@@ -20,14 +24,23 @@ import java.util.Map;
 
 public class RegistrationHandle implements HttpHandler {
     private AccountCredentials accountCredentials;
+    private UserDAO userDAO;
+    PostgreSQLJDBC postgreSQLJDBC;
+    CodecoolerDAOImpl codecoolerDAO;
 
-    public RegistrationHandle() {
+    public RegistrationHandle(PostgreSQLJDBC postgreSQLJDBC) {
+        this.postgreSQLJDBC = postgreSQLJDBC;
+        this.accountCredentials = new AccountCredentials();
+        this.userDAO = new UserDAO(postgreSQLJDBC);
+        this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
+
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String response = "";
-        String method = exchange.getRequestMethod();
+        String method = exchange.getRequestMethod(); //post or get string
+        System.out.println(method);
         exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
         exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
 
@@ -39,20 +52,24 @@ public class RegistrationHandle implements HttpHandler {
 
             Map<String, String> data = Parser.parseFormData(form);
 
-            AccountCredentials accountCredentials = new AccountCredentials(login, password, email, roleEnum);
-            Codecooler codecooler = new Codecooler(id, accountCredentials, firstName, lastName, moduleEnum, purse);
+            this.accountCredentials = new AccountCredentials();
+            accountCredentials.setLogin(data.get("login"))
+                    .setPassword(data.get("password"))
+                    .setEmail(data.get("email"))
+                    .setRoleEnum(RoleEnum.CODECOOLER);
 
-            codecooler.setFirstName(data.get("firstName"));
-            codecooler.setFirstName(data.get("lastName"));
-            codecooler.setLastName(data.get("lastName"));
-            accountCredentials.setLogin("login");
-            accountCredentials.setEmail(data.get("email"));
-            accountCredentials.setPassword(data.get("password"));
-            accountCredentials.setRoleEnum(RoleEnum.CODECOOLER);
-            accountCredentials.setPassword("password");
+            String firstName = data.get("firstName");
+            String lastName = data.get("lastName");
+            Codecooler codecooler = new Codecooler(accountCredentials, firstName, lastName);
 
-            sqlUserDao.add(codecooler);
-
+            codecooler.setFirstName(firstName)
+                    .setLastName(lastName)
+                    .setAccountCredentials(accountCredentials);
+            try {
+                codecoolerDAO.setCodecooler(codecooler, accountCredentials);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         exchange.sendResponseHeaders(200, response.length());
         OutputStream outputStream = exchange.getResponseBody();
