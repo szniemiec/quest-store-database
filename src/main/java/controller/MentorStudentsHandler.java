@@ -7,7 +7,6 @@ import daos.codecooler.CodecoolerDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
 import models.users.Codecooler;
-import models.users.Mentor;
 
 import java.io.IOException;
 import java.io.OutputStream;

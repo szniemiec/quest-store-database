@@ -3,9 +3,7 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
-import daos.mentor.MentorDAO;
 import daos.mentor.MentorDAOImpl;
 import daos.quest.QuestDAO;
 import daos.quest.QuestDAOImpl;
@@ -20,10 +18,8 @@ import view.View;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class MentorController implements HttpHandler {

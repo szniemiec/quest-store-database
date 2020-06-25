@@ -9,11 +9,7 @@ import models.Purse;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
 
-import javax.management.relation.Role;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,23 +82,28 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
 
         return new Codecooler(id, accountCredentials, firstname, lastname, moduleEnum, purse);
     }
-    public void setCodecooler (Codecooler codecooler, AccountCredentials accountCredentials) throws Exception {
-        Statement st = postgreSQLJDBC.getConnection().createStatement();
+    public void setCodecooler (Object t, AccountCredentials accountCredentials) throws Exception {
+        Connection c = postgreSQLJDBC.getConnection();
+        Codecooler codecooler = (Codecooler) t;
         RoleEnum roleEnum = roleToEnum(3);
         ModuleEnum moduleEnum = moduleIdToEnum(1);
         int coins = 0;
         final String QUERY_SQL = "INSERT INTO \"Users\" (login, password, email, role_id, first_name, last_name, module_id, coins) " +
                 "VALUES (?,?,?,?,?,?,?,?)";
-        PreparedStatement ps = this.postgreSQLJDBC.getConnection().prepareStatement(QUERY_SQL);
-        ps.setString(1,accountCredentials.getLogin());
-        ps.setString(2,accountCredentials.getPassword());
-        ps.setString(3,accountCredentials.getEmail());
-        ps.setInt(4,3);
-        ps.setString(5,codecooler.getFirstName());
-        ps.setString(6,codecooler.getLastName());
-        ps.setInt(7,1);
-ps.setInt(8,coins);
-ps.executeUpdate();
+        try {
+            PreparedStatement ps = c.prepareStatement(QUERY_SQL);
+            ps.setString(1, accountCredentials.getLogin());
+            ps.setString(2, accountCredentials.getPassword());
+            ps.setString(3, accountCredentials.getEmail());
+            ps.setInt(4, 3);
+            ps.setString(5, codecooler.getFirstName());
+            ps.setString(6, codecooler.getLastName());
+            ps.setInt(7, 1);
+            ps.setInt(8, coins);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
