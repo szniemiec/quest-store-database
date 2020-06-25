@@ -8,31 +8,46 @@ public class Codecooler extends User {
     private ModuleEnum moduleEnum;
     private Purse purse;
 
+    public Codecooler(int id, AccountCredentials accountCredentials, String firstName, String lastName) {
+        super(id, accountCredentials, firstName, lastName);
+    }
 
+    public Codecooler(AccountCredentials accountCredentials, String firstName, String lastName) {
+        super(accountCredentials, firstName, lastName);
+    }
 
     public Codecooler(int id, AccountCredentials accountCredentials, String firstName, String lastName, ModuleEnum moduleEnum, Purse purse) {
         super(id, accountCredentials, firstName, lastName);
         this.moduleEnum = moduleEnum;
         this.purse = purse;
     }
+//
+//    public Codecooler() {
+//        super(id, accountCredentials, firstname, lastName);
+//    }
+
     @Override
-    public void setId(int id) {
+    public User setId(int id) {
         super.setId(id);
+        return null;
     }
 
     @Override
-    public void setAccountCredentials(AccountCredentials accountCredentials) {
+    public User setAccountCredentials(AccountCredentials accountCredentials) {
         super.setAccountCredentials(accountCredentials);
+        return null;
     }
 
     @Override
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         super.setFirstName(firstName);
+        return null;
     }
 
     @Override
-    public void setLastName(String lastName) {
+    public User setLastName(String lastName) {
         super.setLastName(lastName);
+        return null;
     }
     public ModuleEnum getModule() {
         return moduleEnum;
@@ -42,4 +57,8 @@ public class Codecooler extends User {
         return purse;
     }
 
+    public Codecooler setModuleEnum(ModuleEnum moduleEnum) {
+        this.moduleEnum = moduleEnum;
+        return this;
+    }
 }

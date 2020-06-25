@@ -3,23 +3,27 @@ package models.users;
 public class Creep extends User {
 
     @Override
-    public void setId(int id) {
+    public User setId(int id) {
         super.setId(id);
+        return null;
     }
 
     @Override
-    public void setAccountCredentials(AccountCredentials accountCredentials) {
+    public User setAccountCredentials(AccountCredentials accountCredentials) {
         super.setAccountCredentials(accountCredentials);
+        return null;
     }
 
     @Override
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         super.setFirstName(firstName);
+        return null;
     }
 
     @Override
-    public void setLastName(String lastName) {
+    public User setLastName(String lastName) {
         super.setLastName(lastName);
+        return null;
     }
 
     public Creep(int id, AccountCredentials accountCredentials, String firstName, String lastName) {
