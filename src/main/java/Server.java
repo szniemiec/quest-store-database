@@ -1,6 +1,7 @@
 import com.sun.net.httpserver.HttpServer;
 import controller.LoginController;
 import controller.MentorController;
+import controller.MentorStudentsHandler;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import server.Http;
@@ -23,11 +24,11 @@ public class Server {
         // wpisujesz scieżki które chcesz mieć w quest Store(creep. nemtor ,codecooler,login, mentorId3,questdetails, etc)
         server.createContext("/mentor", new MentorController(database));
         server.createContext("/login", new LoginController(database));
+        server.createContext("/mentor/students", new MentorStudentsHandler(database));
         server.setExecutor(null);
         server.start();
 
         System.out.println("Server has started on port 8000");
     }
-
 //        database.disconnectFromDatabase();
 }
