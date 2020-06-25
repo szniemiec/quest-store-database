@@ -2,6 +2,7 @@ import com.sun.net.httpserver.HttpServer;
 import controller.LoginController;
 import controller.MentorController;
 import controller.MentorStudentsHandler;
+import controller.RegistrationHandle;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import server.Http;
@@ -25,6 +26,7 @@ public class Server {
         server.createContext("/mentor", new MentorController(database));
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
+        server.createContext("/register",new RegistrationHandle(database));
         server.setExecutor(null);
         server.start();
 
