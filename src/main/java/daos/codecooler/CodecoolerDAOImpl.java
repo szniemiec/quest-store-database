@@ -8,16 +8,15 @@ import models.users.AccountCredentials;
 import models.users.Codecooler;
 import models.users.Mentor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodecoolerDAOImpl implements CodecoolerDAO {
+
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet rs;
+    private RoleEnum roleEnum;
 
     public CodecoolerDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
@@ -27,6 +26,7 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
     public List<Codecooler> getCodecoolers() throws SQLException {
         List<Codecooler> codecoolers = new ArrayList<>();
         final String SELECT_SQL = "SELECT * FROM \"Users\" WHERE role_id = 3;";
+
         Statement st = postgreSQLJDBC.getConnection().createStatement();
 
         try {
@@ -83,6 +83,29 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
 
         return new Codecooler(id, accountCredentials, firstname, lastname, moduleEnum, purse);
     }
+    public void setCodecooler (Object t, AccountCredentials accountCredentials) throws Exception {
+        Connection c = postgreSQLJDBC.getConnection();
+        Codecooler codecooler = (Codecooler) t;
+        RoleEnum roleEnum = roleToEnum(3);
+        ModuleEnum moduleEnum = moduleIdToEnum(1);
+        int coins = 0;
+        final String QUERY_SQL = "INSERT INTO \"Users\" (login, password, email, role_id, first_name, last_name, module_id, coins) " +
+                "VALUES (?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = c.prepareStatement(QUERY_SQL);
+            ps.setString(1, accountCredentials.getLogin());
+            ps.setString(2, accountCredentials.getPassword());
+            ps.setString(3, accountCredentials.getEmail());
+            ps.setInt(4, 3);
+            ps.setString(5, codecooler.getFirstName());
+            ps.setString(6, codecooler.getLastName());
+            ps.setInt(7, 1);
+            ps.setInt(8, coins);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
     private ModuleEnum moduleIdToEnum(int moduleId) throws Exception {
         ModuleEnum moduleEnum;
@@ -94,5 +117,15 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
             default -> throw new Exception("Wrong module id");
         }
         return moduleEnum;
+    }
+    private RoleEnum roleToEnum(int roleid) throws Exception {
+        RoleEnum roleEnum;
+        switch (roleid) {
+            case 1 -> roleEnum = RoleEnum.CREEP;
+            case 2 -> roleEnum = RoleEnum.MENTOR;
+            case 3 -> roleEnum = RoleEnum.CODECOOLER;
+            default -> throw new Exception("Wrong role id");
+        }
+        return roleEnum;
     }
 }

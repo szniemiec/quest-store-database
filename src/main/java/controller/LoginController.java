@@ -11,6 +11,7 @@ import services.InputService;
 import view.View;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,22 +25,14 @@ public class LoginController implements HttpHandler {
     boolean isRunning;
 
     public LoginController(PostgreSQLJDBC postgreSQLJDBC) {
-       this.postgreSQLJDBC = postgreSQLJDBC;
+        this.postgreSQLJDBC = postgreSQLJDBC;
         this.userDAO = new UserDAO(postgreSQLJDBC);
         this.view = new View();
         this.inputService = new InputService();
         isRunning = true;
     }
 
-    public void startLogin() throws Exception {
-        view.clearScreen();
-        User loggingUser = loginProcess();
-        menuSwitch(loggingUser);
-    }
-
-    public User loginProcess() throws SQLException {
-        String login = getLoginFromUser();
-        String password = getPasswordFromUser();
+    public User loginProcess(String login, String password) throws SQLException {
         User loggingUser = userDAO.getLoggedUser(login, password);
         return loggingUser;
     }
@@ -64,38 +57,18 @@ public class LoginController implements HttpHandler {
         }
     }
 
-    private String getLoginFromUser() {
-        return inputService.stringWithMessage("Insert login: ");
-    }
-
-    private String getPasswordFromUser() {
-        return inputService.stringWithMessage("Insert password: ");
-    }
-
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String response = "OK";
-        String method = exchange.getRequestMethod(); // "post" , "get"
+    public void handle(HttpExchange httpExchange) throws IOException {
+        String response = "";
+        String method = httpExchange.getRequestMethod(); // "post" , "get"
         System.out.println(method);
-        if (method.equals("POST")) {
-            InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "UTF-8");
-            BufferedReader br = new BufferedReader(isr);
-            Map<String, String> data = parseFormData(br.readLine());
-            String login = data.get("login");
-            String password = data.get("password");
-            // podepnij pod metody logowania i przekaz login i passowrd jakos data.get
+        URI uri = httpExchange.getRequestURI();
 
-            try {
-                User loggingUser = userDAO.getLoggedUser(login, password);
-               response = loggingUser.getFirstName();
-
-            } catch (Exception throwables) {
-                throwables.printStackTrace();
-            }
-
+        if (method.equals("POST") && (uri.toString().equals("/login"))) {
+            checkLoginAndPassword(httpExchange);
         }
-        exchange.sendResponseHeaders(200, response.length());
-        OutputStream os = exchange.getResponseBody();
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes(), 0, response.length());
         os.close();
     }
@@ -110,5 +83,30 @@ public class LoginController implements HttpHandler {
             map.put(keyValue[0], value);
         }
         return map;
+    }
+
+    static Map<String, String> getDataFromRequest(HttpExchange httpExchange) throws IOException {
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "UTF-8");
+        BufferedReader br = new BufferedReader(isr);
+        try {
+            Map<String, String> data = parseFormData(br.readLine());
+            System.out.println(data);
+            return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /////// WRONG //////
+    private void checkLoginAndPassword(HttpExchange httpExchange) {
+        try {
+            Map<String, String> loginData = getDataFromRequest(httpExchange);
+            String login = loginData.get("login");
+            String password = loginData.get("password");
+            loginProcess(login, password);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

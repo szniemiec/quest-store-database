@@ -3,10 +3,9 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import daos.artifact.ArtifactDAO;
 import daos.artifact.ArtifactDAOImpl;
-import daos.mentor.MentorDAO;
 import daos.mentor.MentorDAOImpl;
+import daos.quest.QuestDAO;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.QuestCategoryEnum;
@@ -19,7 +18,6 @@ import view.View;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
@@ -185,7 +183,7 @@ public class MentorController implements HttpHandler {
     }
 
     public void editQuest(int questId) throws Exception {
-        QuestDAOImpl questDao = new QuestDAOImpl(postgreSQLJDBC);
+        QuestDAO questDao = new QuestDAOImpl(postgreSQLJDBC);
         Quest editedQuest = questDao.getQuest(questId);
         String newValue;
         int newValueInt;
@@ -282,7 +280,7 @@ public class MentorController implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange httpExchange) throws IOException {
         String response = "";
 
         try {
@@ -293,15 +291,15 @@ public class MentorController implements HttpHandler {
             response = mapper.writeValueAsString(mentors);
             System.out.println(response);
 
-            exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
+            httpExchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
             //CORS policy * - zezwolenie na komunikacje z kazdym frontem
-            exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
-            exchange.sendResponseHeaders(200, response.length());
+            httpExchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
+            httpExchange.sendResponseHeaders(200, response.getBytes().length);
         }catch (Exception e) {
-            exchange.sendResponseHeaders(404, response.length());
+            httpExchange.sendResponseHeaders(404, response.length());
     }
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes(),0,response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
             os.close();
     }
 }
