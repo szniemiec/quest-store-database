@@ -1,5 +1,3 @@
-
-
 package daos.codecooler;
 
 import database.PostgreSQLJDBC;
@@ -8,12 +6,14 @@ import enums.RoleEnum;
 import models.Purse;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
+import models.users.Mentor;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodecoolerDAOImpl implements CodecoolerDAO {
+
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet rs;
     private RoleEnum roleEnum;
@@ -26,6 +26,7 @@ public class CodecoolerDAOImpl implements CodecoolerDAO {
     public List<Codecooler> getCodecoolers() throws SQLException {
         List<Codecooler> codecoolers = new ArrayList<>();
         final String SELECT_SQL = "SELECT * FROM \"Users\" WHERE role_id = 3;";
+
         Statement st = postgreSQLJDBC.getConnection().createStatement();
 
         try {

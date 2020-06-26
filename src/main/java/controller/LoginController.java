@@ -90,6 +90,7 @@ public class LoginController implements HttpHandler {
         BufferedReader br = new BufferedReader(isr);
         try {
             Map<String, String> data = parseFormData(br.readLine());
+            System.out.println(data);
             return data;
         } catch (IOException e) {
             e.printStackTrace();
