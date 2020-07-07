@@ -43,7 +43,7 @@ public class RegistrationHandle implements HttpHandler {
         System.out.println(method);
         exchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
         exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
-
+// wysyłanie inputów ze strony
         if (method.equals("POST")) {
             InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -55,7 +55,7 @@ public class RegistrationHandle implements HttpHandler {
             accountCredentials.setLogin(data.get("login"))
                     .setPassword(data.get("password"))
                     .setEmail(data.get("email"))
-                    .setRoleEnum(RoleEnum.CODECOOLER);
+                    .setRoleEnum(RoleEnum.MENTOR);
 
             String firstName = data.get("firstName");
             String lastName = data.get("lastName");
