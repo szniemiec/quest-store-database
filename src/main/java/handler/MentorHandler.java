@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class MentorHandler implements HttpHandler {
-    private PostgreSQLJDBC postgreSQLJDBC;
+    PostgreSQLJDBC postgreSQLJDBC;
     private MentorDAOImpl mentorDAO;
 
     public MentorHandler(PostgreSQLJDBC postgreSQLJDBC) {
-        this.postgreSQLJDBC = postgreSQLJDBC;
+   this.postgreSQLJDBC = postgreSQLJDBC;
         mentorDAO = new MentorDAOImpl(postgreSQLJDBC);
     }
 
