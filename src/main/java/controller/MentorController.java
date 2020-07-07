@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MentorController implements HttpHandler {
-    public  InputService inputService;
+    public InputService inputService;
     private Artifact artifact;
     private Quest quest;
     private PostgreSQLJDBC postgreSQLJDBC;
@@ -223,7 +223,8 @@ public class MentorController implements HttpHandler {
         System.out.println("Please, type a new value:");
         return inputService.getStringInput();
     }
-    public int getUserIntInput(){
+
+    public int getUserIntInput() {
         System.out.println("Please, type a new value:");
         return inputService.getIntInput();
     }
@@ -255,7 +256,7 @@ public class MentorController implements HttpHandler {
                 isEditing = false;
                 break;
             case 3:
-                  int newValueInt =  Integer.valueOf(getUserInput());
+                int newValueInt = Integer.valueOf(getUserInput());
                 artifactDao.editArtifact(artifact.setCost(newValueInt));
                 isEditing = false;
                 break;
@@ -298,9 +299,9 @@ public class MentorController implements HttpHandler {
 
         }catch (Exception e) {
             httpExchange.sendResponseHeaders(404, response.length());
-    }
-            OutputStream os = httpExchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+        }
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 }

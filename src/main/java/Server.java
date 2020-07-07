@@ -1,11 +1,10 @@
 import com.sun.net.httpserver.HttpServer;
 import controller.LoginController;
-import controller.MentorController;
-import controller.MentorStudentsHandler;
-import controller.RegistrationHandle;
+import handler.MentorStudentsHandler;
+import handler.MentorHandler;
+import handler.RegistrationHandle;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
-import server.Http;
 import services.JSONService;
 
 import java.net.InetSocketAddress;
@@ -15,7 +14,6 @@ public class Server {
     public static void main(String[] args) throws Exception {
 
         PostgreSQLJDBC database = new PostgreSQLJDBC();
-        Http http = new Http(database);
         JSONService jsonService = new JSONService();
 
         DatabaseCredentials credentials = jsonService.readEnviroment();
@@ -23,10 +21,10 @@ public class Server {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         // wpisujesz scieżki które chcesz mieć w quest Store(creep. nemtor ,codecooler,login, mentorId3,questdetails, etc)
-        server.createContext("/mentor", new MentorController(database));
+        server.createContext("/mentor", new MentorHandler(database));
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
-        server.createContext("/create-mentor",new RegistrationHandle(database));
+        server.createContext("/register", new RegistrationHandle(database));
         server.setExecutor(null);
         server.start();
 

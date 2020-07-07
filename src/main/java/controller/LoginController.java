@@ -6,7 +6,6 @@ import daos.UserDAO;
 import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import models.users.User;
-import server.Http;
 import services.InputService;
 import view.View;
 
