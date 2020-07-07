@@ -29,7 +29,7 @@ public class MentorStudentsHandler implements HttpHandler {
         String uri = httpExchange.getRequestURI().getRawPath();
         String method = httpExchange.getRequestMethod();
 
-        if (method.equals("GET")) {
+//        if (method.equals("GET")) {
             String response = "";
 
             try {
@@ -40,6 +40,7 @@ public class MentorStudentsHandler implements HttpHandler {
 
                 httpExchange.getResponseHeaders().put("Content-Type", Collections.singletonList("application/json"));
                 httpExchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
+                httpExchange.sendResponseHeaders(200, response.getBytes().length);
 
             } catch (SQLException e) {
                 httpExchange.sendResponseHeaders(404, response.length());
@@ -49,4 +50,4 @@ public class MentorStudentsHandler implements HttpHandler {
             os.close();
         }
     }
-}
+//}

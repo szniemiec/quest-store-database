@@ -296,7 +296,8 @@ public class MentorController implements HttpHandler {
             //CORS policy * - zezwolenie na komunikacje z kazdym frontem
             httpExchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
             httpExchange.sendResponseHeaders(200, response.getBytes().length);
-        } catch (Exception e) {
+
+        }catch (Exception e) {
             httpExchange.sendResponseHeaders(404, response.length());
         }
         OutputStream os = httpExchange.getResponseBody();
