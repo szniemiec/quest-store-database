@@ -24,7 +24,7 @@ public class Server {
         server.createContext("/mentor", new MentorHandler(database));
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
-        server.createContext("/register", new RegistrationHandle(database));
+        server.createContext("/create-mentor", new RegistrationHandle(database));
         server.setExecutor(null);
         server.start();
 
