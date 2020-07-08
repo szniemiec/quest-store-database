@@ -1,6 +1,5 @@
 package controller;
 
-import models.users.Mentor;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
@@ -104,25 +103,5 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
             System.exit(0);
         }
         return sessionPresent;
-    }
-
-    @Override
-    public void addMentor(Mentor mentor) {
-
-    }
-
-    @Override
-    public void editMentor(Mentor mentor, String id) {
-
-    }
-
-    @Override
-    public void deleteMentor(String id) {
-
-    }
-
-    @Override
-    public Mentor getMentorById(String id) {
-        return null;
     }
 }
