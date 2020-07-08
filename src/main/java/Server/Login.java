@@ -5,8 +5,6 @@ import com.sun.net.httpserver.HttpHandler;
 import controller.LoginAccesDAO;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-import Server.CookieHelper;
-import Server.FromDataParser;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -64,10 +62,7 @@ public class Login implements HttpHandler {
         sendResponse(httpExchange, response);
     }
 
-    /**
-     * Form data is sent as a urlencoded string. Thus we have to parse this string to get data that we want.
-     * See: https://en.wikipedia.org/wiki/POST_(HTTP)
-     */
+
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(301, response.length());
         OutputStream os = httpExchange.getResponseBody();
