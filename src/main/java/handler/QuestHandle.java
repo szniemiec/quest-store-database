@@ -1,5 +1,6 @@
 package handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import daos.codecooler.CodecoolerDAOImpl;
@@ -13,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class QuestHandle implements HttpHandler {
@@ -22,7 +25,7 @@ public class QuestHandle implements HttpHandler {
     CodecoolerDAOImpl codecoolerDAO;
 
     public QuestHandle(PostgreSQLJDBC postgreSQLJDBC) {
-        this.questDAO =  new QuestDAOImpl(postgreSQLJDBC);
+        this.questDAO = new QuestDAOImpl(postgreSQLJDBC);
         this.postgreSQLJDBC = postgreSQLJDBC;
         this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
     }
@@ -57,6 +60,17 @@ public class QuestHandle implements HttpHandler {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else { //GET
+
+            List<Quest> quests = null;
+            try {
+                quests = this.questDAO.getQuests();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            response = mapper.writeValueAsString(quests);
+            System.out.println(response);
         }
         exchange.sendResponseHeaders(200, response.length());
         OutputStream outputStream = exchange.getResponseBody();
