@@ -35,6 +35,7 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
     private void retriveData(String email, String pass) throws SQLException {
         loginData = new ArrayList<>();
         Statement stmt = connection.createStatement();
+        //// NIE MAMY TAKIEJ TABELI JAK LOGIN ACCESS w DB- skąd chcesz to wyciągnać??
         String sql = String.format("SElECT id, access_level FROM login_access WHERE email = '%s' AND password = '%s' ", email, pass);
         ResultSet rs = stmt.executeQuery(sql);
         while ( rs.next() ) {
@@ -47,6 +48,7 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
 
     public void saveSessionId(String sessionId, String email){
         try {
+            //TUTAJ TO SAMO
             ps = connection.prepareStatement("UPDATE login_access SET session_id = ? WHERE email = ?;");
             ps.setString(1, sessionId);
             ps.setString(2, email);
