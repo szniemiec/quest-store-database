@@ -37,7 +37,6 @@ public class QuestDAOImpl implements QuestDAO {
     }
     public void setQuest (Quest quest) {
         Connection c = postgreSQLJDBC.getConnection();
-
         final String QUERY_SQL = "INSERT INTO \"Quests\" (\"Name\", \"Description\", \"Reward\", \"category_id\")" +
                 "VALUES (?, ?, ?, ?);";
         try {
