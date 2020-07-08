@@ -7,10 +7,10 @@ public class Quest {
     private int id;
     private String name;
     private String description;
-    private int reward;
+    private String reward;
     private QuestCategoryEnum questCategoryEnum;
 
-    public Quest(int id, String name, String description, int reward, QuestCategoryEnum questCategoryEnum) {
+    public Quest(int id, String name, String description, String reward, QuestCategoryEnum questCategoryEnum) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -18,12 +18,18 @@ public class Quest {
         this.questCategoryEnum = questCategoryEnum;
     }
 
-    public Quest(String name, String description, int reward, QuestCategoryEnum questCategoryEnum) {
+    public Quest(String name, String description, String reward, QuestCategoryEnum questCategoryEnum) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.reward = reward;
         this.questCategoryEnum = questCategoryEnum;
+    }
+
+    public Quest(String name, String description, String reward) {
+        this.name = name;
+        this.description = description;
+        this.reward = reward;
     }
 
     public Quest() {
@@ -42,7 +48,7 @@ public class Quest {
         return description;
     }
 
-    public int getReward() {
+    public String getReward() {
         return reward;
     }
 
@@ -65,7 +71,7 @@ public class Quest {
         return this;
     }
 
-    public Quest setReward(int newValue) {
+    public Quest setReward(String newValue) {
         this.reward = newValue;
         return this;
     }
