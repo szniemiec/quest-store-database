@@ -48,7 +48,7 @@ public class MentorDAOImpl implements MentorDAO {
         String lastName = result.getString("last_name");
 
         AccountCredentials accountCredentials = new AccountCredentials(login, password, email, RoleEnum.MENTOR);
-        return new Mentor(id, accountCredentials,firstName, lastName);
+        return new Mentor(id, accountCredentials, firstName, lastName);
     }
 
     @Override
@@ -76,7 +76,8 @@ public class MentorDAOImpl implements MentorDAO {
             e.printStackTrace();
         }
     }
-    public void setMentor (Object t, AccountCredentials accountCredentials) {
+
+    public void setMentor(Object t, AccountCredentials accountCredentials) {
         Connection c = postgreSQLJDBC.getConnection();
         Mentor mentor = (Mentor) t;
         int coins = 0;
@@ -91,7 +92,7 @@ public class MentorDAOImpl implements MentorDAO {
             ps.setString(5, mentor.getFirstName());
             ps.setString(6, mentor.getLastName());
             ps.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

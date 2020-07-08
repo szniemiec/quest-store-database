@@ -3,6 +3,8 @@ package daos.quest;
 import database.PostgreSQLJDBC;
 import enums.QuestCategoryEnum;
 import models.Quest;
+import models.users.AccountCredentials;
+import models.users.Mentor;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +35,23 @@ public class QuestDAOImpl implements QuestDAO {
 
         return questList;
     }
+    public void setQuest (Quest quest) {
+        Connection c = postgreSQLJDBC.getConnection();
+
+        final String QUERY_SQL = "INSERT INTO \"Quests\" (\"Name\", \"Description\", \"Reward\", \"category_id\")" +
+                "VALUES (?, ?, ?, ?);";
+        try {
+            PreparedStatement ps = c.prepareStatement(QUERY_SQL);
+            ps.setString(1, quest.getName());
+            ps.setString(2, quest.getDescription());
+            ps.setString(3, quest.getReward());
+            ps.setInt(4, 2);
+
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public Quest getQuest(int id) throws SQLException {
@@ -54,21 +73,21 @@ public class QuestDAOImpl implements QuestDAO {
 
     @Override
     public void addQuest(Quest quest) {
+        Connection c = postgreSQLJDBC.getConnection();
         final String INSERT_SQL = "INSERT INTO \"Quests\" (\"Name\", \"Description\", \"Reward\", \"category_id\")" +
                 "VALUES (?, ?, ?, ?);";
 
         String name = quest.getName();
         String description = quest.getDescription();
-        int reward = quest.getReward();
+        String reward = quest.getReward();
         QuestCategoryEnum questCategoryEnum = quest.getQuestCategoryEnum();
 
-        try (Connection c = postgreSQLJDBC.getConnection()) {
-            PreparedStatement ps = null;
+        try  {
+            PreparedStatement ps = c.prepareStatement(INSERT_SQL);
             ps = c.prepareStatement(INSERT_SQL);
-
             ps.setString(1, name);
             ps.setString(2, description);
-            ps.setInt(3, reward);
+            ps.setString(3, reward);
             ps.setInt(4, questCategoryEnum.getCategoryId());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -99,7 +118,7 @@ public class QuestDAOImpl implements QuestDAO {
             PreparedStatement ps = postgreSQLJDBC.getConnection().prepareStatement(UPDATE_SQL);
             ps.setString(1, quest.getName());
             ps.setString(2, quest.getDescription());
-            ps.setInt(3, quest.getReward());
+            ps.setString(3, quest.getReward());
             ps.setInt(4, quest.getQuestCategoryEnum().getCategoryId());
             ps.setInt(5, quest.getId());
             ps.executeUpdate();
@@ -118,7 +137,7 @@ public class QuestDAOImpl implements QuestDAO {
             String description = rs.getString("description");
             int categoryId = rs.getInt("category_id");
             QuestCategoryEnum questCategoryEnum = categoryIdToEnum(categoryId);
-            int reward = rs.getInt("reward");
+            String reward = rs.getString("reward");
 
             Quest quest = new Quest(id, name, description, reward, questCategoryEnum);
 
