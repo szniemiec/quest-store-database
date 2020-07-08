@@ -25,7 +25,7 @@ public class Server {
         server.createContext("/creep", new CreepHandler(database));
 //        server.createContext("/creep", new CreepHandler(database));
         server.createContext("/add-quest", new QuestHandle(database));
-
+        server.createContext("/quests", new QuestHandle(database) );
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
         server.createContext("/create-mentor", new RegistrationHandle(database));
