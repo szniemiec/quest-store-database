@@ -5,17 +5,16 @@ public class Artifact {
     private int id;
     private String title;
     private String description;
-    private int cost;
+    private String cost;
 
-    public Artifact(int id, String title, String description, int cost) {
+    public Artifact(int id, String title, String description, String cost) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.cost = cost;
     }
 
-    public Artifact(String title, String description, int cost) {
-        this.id = id;
+    public Artifact(String title, String description, String cost) {
         this.title = title;
         this.description = description;
         this.cost = cost;
@@ -37,7 +36,7 @@ public class Artifact {
         return description;
     }
 
-    public int getCost() {
+    public String getCost() {
         return cost;
     }
 
@@ -47,16 +46,16 @@ public class Artifact {
 
     public Artifact setTitle(String title) {
         this.title = title;
-        return null;
+        return this;
     }
 
     public Artifact setDescription(String description) {
         this.description = description;
-        return null;
+        return this;
     }
 
-    public Artifact setCost(int cost) {
+    public Artifact setCost(String cost) {
         this.cost = cost;
-        return null;
+        return this;
     }
 }

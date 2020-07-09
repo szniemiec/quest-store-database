@@ -1,9 +1,6 @@
 import com.sun.net.httpserver.HttpServer;
 import controller.LoginController;
-import handler.MentorStudentsHandler;
-import handler.CreepHandler;
-import handler.QuestHandle;
-import handler.RegistrationHandle;
+import handler.*;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import services.JSONService;
@@ -29,6 +26,7 @@ public class Server {
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
         server.createContext("/create-mentor", new RegistrationHandle(database));
+        server.createContext("/artifact", new ArtifactHandle(database));
         server.setExecutor(null);
         server.start();
 
