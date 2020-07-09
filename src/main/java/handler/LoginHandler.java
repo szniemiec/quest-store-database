@@ -46,7 +46,7 @@ public class LoginHandler implements HttpHandler {
         }
         if (method.equals("POST")) {
 
-            Map inputs = formDataParser.getData(httpExchange);
+            Map inputs = DataFormParser.getData(httpExchange);
             String providedMail = inputs.get("login").toString();
             String providedPassword = inputs.get("password").toString();
             System.out.println(providedMail);

@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import daos.codecooler.CodecoolerDAOImpl;
 import daos.quest.QuestDAOImpl;
 import database.PostgreSQLJDBC;
-import helpers.Parser;
+import helpers.DataFormParser;
 import models.Quest;
 
 import java.io.BufferedReader;
@@ -23,11 +23,13 @@ public class QuestHandle implements HttpHandler {
     private QuestDAOImpl questDAO;
     PostgreSQLJDBC postgreSQLJDBC;
     CodecoolerDAOImpl codecoolerDAO;
+    DataFormParser dataFormParser;
 
     public QuestHandle(PostgreSQLJDBC postgreSQLJDBC) {
         this.questDAO = new QuestDAOImpl(postgreSQLJDBC);
         this.postgreSQLJDBC = postgreSQLJDBC;
         this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
+        this.dataFormParser = new DataFormParser();
     }
 
     @Override
@@ -40,12 +42,7 @@ public class QuestHandle implements HttpHandler {
 
         // wysyłanie inputów ze strony
         if (method.equals("POST")) {
-            InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String form = bufferedReader.readLine();
-            Map<String, String> data = Parser.parseFormData(form);
-            System.out.println(form);
-            System.out.println(data);
+            Map<String, String> data = dataFormParser.getData(exchange);
 
             String name = data.get("Name");
             String description = data.get("description");

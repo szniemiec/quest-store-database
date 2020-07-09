@@ -7,7 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import daos.artifact.ArtifactDAOImpl;
 import daos.codecooler.CodecoolerDAOImpl;
 import database.PostgreSQLJDBC;
-import helpers.Parser;
+import helpers.DataFormParser;
 import models.Artifact;
 
 import java.io.BufferedReader;
@@ -24,11 +24,13 @@ public class ArtifactHandle implements HttpHandler {
     private ArtifactDAOImpl artifactDAO;
     PostgreSQLJDBC postgreSQLJDBC;
     CodecoolerDAOImpl codecoolerDAO;
+    DataFormParser dataFormParser;
 
     public ArtifactHandle(PostgreSQLJDBC postgreSQLJDBC) {
         this.artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
         this.postgreSQLJDBC = postgreSQLJDBC;
         this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
+        this.dataFormParser = new DataFormParser();
     }
 
     @Override
@@ -41,11 +43,7 @@ public class ArtifactHandle implements HttpHandler {
 
         // wysyłanie inputów ze strony
         if (method.equals("POST")) {
-            InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String form = bufferedReader.readLine();
-            Map<String, String> data = Parser.parseFormData(form);
-            System.out.println(form);
+            Map<String, String> data = DataFormParser.getData(exchange);
             System.out.println(data);
 
             String name = data.get("name");
