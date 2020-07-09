@@ -7,16 +7,12 @@ import daos.codecooler.CodecoolerDAOImpl;
 import daos.mentor.MentorDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.RoleEnum;
-import helpers.Parser;
+import helpers.DataFormParser;
 import models.users.AccountCredentials;
-import models.users.Codecooler;
 import models.users.Mentor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -26,6 +22,7 @@ public class RegistrationHandle implements HttpHandler {
     private UserDAO userDAO;
     PostgreSQLJDBC postgreSQLJDBC;
     CodecoolerDAOImpl codecoolerDAO;
+    DataFormParser dataFormParser;
 
     public RegistrationHandle(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
@@ -33,7 +30,7 @@ public class RegistrationHandle implements HttpHandler {
         this.userDAO = new UserDAO(postgreSQLJDBC);
         this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
         this.mentorDao = new MentorDAOImpl(postgreSQLJDBC);
-
+        this.dataFormParser = new DataFormParser();
     }
 
     @Override
@@ -45,11 +42,8 @@ public class RegistrationHandle implements HttpHandler {
         exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
 // wysyłanie inputów ze strony
         if (method.equals("POST")) {
-            InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String form = bufferedReader.readLine();
-            Map<String, String> data = Parser.parseFormData(form);
-            System.out.println(form);
+
+            Map<String, String> data = dataFormParser.getData(exchange);
             System.out.println(data);
 
             accountCredentials.setLogin(data.get("login"))

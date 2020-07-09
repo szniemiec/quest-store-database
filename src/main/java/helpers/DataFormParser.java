@@ -1,4 +1,4 @@
-package Server;
+package helpers;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FromDataParser {
+public class DataFormParser {
 
 
 

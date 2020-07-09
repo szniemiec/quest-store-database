@@ -1,9 +1,11 @@
-package Server;
+package handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import controller.LoginAccesDAO;
+import daos.loginAccess.LoginAccesDAO;
 import database.PostgreSQLJDBC;
+import helpers.CookieHelper;
+import helpers.DataFormParser;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
@@ -16,15 +18,15 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class Login implements HttpHandler {
+public class LoginHandler implements HttpHandler {
     private CookieHelper cookieHelper;
     private LoginAccesDAO loginAccesDAO;
-    private FromDataParser formDataParser;
+    private DataFormParser formDataParser;
     private Optional<HttpCookie> cookie;
 
-    public Login(PostgreSQLJDBC postgreSQLJDBC) {
+    public LoginHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.loginAccesDAO = new LoginAccesDAO(postgreSQLJDBC);
-        formDataParser = new FromDataParser();
+        formDataParser = new DataFormParser();
         cookieHelper = new CookieHelper();
     }
 

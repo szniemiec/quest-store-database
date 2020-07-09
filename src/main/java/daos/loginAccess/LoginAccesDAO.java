@@ -1,4 +1,4 @@
-package controller;
+package daos.loginAccess;
 
 import database.PostgreSQLJDBC;
 import org.postgresql.util.PSQLException;
