@@ -1,18 +1,24 @@
 package handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import daos.UserDAO;
 import daos.loginAccess.LoginAccesDAO;
 import database.PostgreSQLJDBC;
 import helpers.CookieHelper;
 import helpers.DataFormParser;
+import models.users.User;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
+import org.postgresql.jdbc.PgConnection;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpCookie;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,11 +29,13 @@ public class LoginHandler implements HttpHandler {
     private LoginAccesDAO loginAccesDAO;
     private DataFormParser formDataParser;
     private Optional<HttpCookie> cookie;
+    private UserDAO userDao;
 
     public LoginHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.loginAccesDAO = new LoginAccesDAO(postgreSQLJDBC);
-        formDataParser = new DataFormParser();
-        cookieHelper = new CookieHelper();
+        this.formDataParser = new DataFormParser();
+        this.cookieHelper = new CookieHelper();
+        this.userDao = new UserDAO(postgreSQLJDBC);
     }
 
     @Override
@@ -41,25 +49,38 @@ public class LoginHandler implements HttpHandler {
             response = generatePage();
         }
         if (method.equals("POST")) {
-            Map inputs = formDataParser.getData(httpExchange);
-            String providedMail = inputs.get("email").toString();
-            String providedPassword = inputs.get("pass").toString();
 
-            List<Integer> loginData = loginAccesDAO.readLoginData(providedMail, providedPassword);
-            String pageAdress = redirect(loginData);
+            Map inputs = DataFormParser.getData(httpExchange);
+            String providedMail = inputs.get("login").toString();
+            String providedPassword = inputs.get("password").toString();
+            System.out.println(providedMail);
+            System.out.println(providedPassword);
 
-            if (!pageAdress.equals(null)) {
-                httpExchange.getResponseHeaders().set("Location", pageAdress);
-                String sessionId = String.valueOf(hash(providedMail + providedPassword + LocalDateTime.now().toString()));
-                loginAccesDAO.saveSessionId(sessionId, providedMail);
-                cookie = Optional.of(new HttpCookie(CookieHelper.getSessionCookieName(), sessionId));
-                httpExchange.getResponseHeaders().add("Set-Cookie", cookie.get().toString());
-            } else {
-                response = generatePage();
+            try {
+                User user = userDao.getLoggedUser(providedMail, providedPassword);
+                System.out.println(user.getFirstName());
+                ObjectMapper mapper = new ObjectMapper();
+                response = mapper.writeValueAsString(user);
+                sendResponse(response, httpExchange, 200);
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                sendResponse("User not authorised", httpExchange, 401);
             }
         }
-        sendResponse(httpExchange, response);
     }
+
+    private void sendResponse(String response, HttpExchange exchange, int status) throws IOException {
+        if (status == 200) {
+            exchange.getResponseHeaders().put("Content-type", Collections.singletonList("application/json"));
+            exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
+        }
+        exchange.sendResponseHeaders(status, response.getBytes().length);
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
 
     private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(301, response.length());
@@ -76,12 +97,14 @@ public class LoginHandler implements HttpHandler {
         }
         return h;
     }
-// NOT USED
+
+    // NOT USED
     private String generatePage() {
         JtwigTemplate template = JtwigTemplate.classpathTemplate("HTML/login.twig");
         JtwigModel model = JtwigModel.newModel();
         return template.render(model);
     }
+
 
     private String redirect(List<Integer> loginData) {
         if (!loginData.isEmpty()) {

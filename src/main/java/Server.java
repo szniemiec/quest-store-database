@@ -6,7 +6,6 @@ import handler.RegistrationHandle;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import services.JSONService;
-
 import java.net.InetSocketAddress;
 
 public class Server {

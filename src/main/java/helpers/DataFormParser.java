@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataFormParser {
-
-
-
     private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
@@ -23,7 +20,7 @@ public class DataFormParser {
         return map;
     }
 
-    public Map<String, String> getData(HttpExchange httpExchange) throws IOException{
+    public static Map<String, String> getData(HttpExchange httpExchange) throws IOException{
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
