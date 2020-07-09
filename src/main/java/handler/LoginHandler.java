@@ -11,18 +11,14 @@ import helpers.DataFormParser;
 import models.users.User;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
-import org.postgresql.jdbc.PgConnection;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 
 public class LoginHandler implements HttpHandler {
     private CookieHelper cookieHelper;
@@ -46,11 +42,11 @@ public class LoginHandler implements HttpHandler {
         if (method.equals("GET")) {
             cookie = cookieHelper.getSessionIdCookie(httpExchange);
             cookie.ifPresent(httpCookie -> loginAccesDAO.deleteSessionID(httpCookie.getValue()));
-            response = generatePage();
+//            response = generatePage();
         }
         if (method.equals("POST")) {
 
-            Map inputs = DataFormParser.getData(httpExchange);
+            Map inputs = formDataParser.getData(httpExchange);
             String providedMail = inputs.get("login").toString();
             String providedPassword = inputs.get("password").toString();
             System.out.println(providedMail);
