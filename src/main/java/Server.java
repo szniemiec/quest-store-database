@@ -13,6 +13,7 @@ public class Server {
 
         PostgreSQLJDBC database = new PostgreSQLJDBC();
         JSONService jsonService = new JSONService();
+        LoginHandler login = new LoginHandler(database);
 
         DatabaseCredentials credentials = jsonService.readEnviroment();
         database.connectToDatabase(credentials);
@@ -26,7 +27,6 @@ public class Server {
         server.createContext("/login", new LoginController(database));
         server.createContext("/mentor/students", new MentorStudentsHandler(database));
         server.createContext("/create-mentor", new RegistrationHandle(database));
-        server.createContext("/artifact", new ArtifactHandle(database));
         server.setExecutor(null);
         server.start();
 

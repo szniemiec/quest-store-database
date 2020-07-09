@@ -1,5 +1,5 @@
 
-package Server;
+package helpers;
 
 import com.sun.net.httpserver.HttpExchange;
 

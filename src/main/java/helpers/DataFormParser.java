@@ -1,4 +1,4 @@
-package Server;
+package helpers;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -8,10 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FromDataParser {
-
-
-
+public class DataFormParser {
     private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
@@ -23,7 +20,7 @@ public class FromDataParser {
         return map;
     }
 
-    public Map<String, String> getData(HttpExchange httpExchange) throws IOException{
+    public static Map<String, String> getData(HttpExchange httpExchange) throws IOException{
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8);
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
