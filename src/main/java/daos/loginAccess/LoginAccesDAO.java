@@ -13,7 +13,6 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet result;
 
-
     public LoginAccesDAO(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
     }
@@ -35,7 +34,7 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
     }
 
     private void retrieveData(String email, String pass) throws SQLException {
-        final String SELECT_SQL = "SElECT id, access_level FROM login_access WHERE email = '"+ email +"' AND password = '"+pass+"'";
+        final String SELECT_SQL = "SElECT id, access_level FROM login_access WHERE email = '" + email + "' AND password = '" + pass + "'";
         loginData = new ArrayList<>();
         Connection c = postgreSQLJDBC.getConnection();
         Statement statement = c.createStatement();
@@ -108,7 +107,6 @@ public class LoginAccesDAO implements LoginAccesDAOInterface {
                 sessionPresent = true;
             }
             rs.close();
-
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
