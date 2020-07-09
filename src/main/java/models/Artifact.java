@@ -15,7 +15,6 @@ public class Artifact {
     }
 
     public Artifact(String title, String description, String cost) {
-        this.id = id;
         this.title = title;
         this.description = description;
         this.cost = cost;
@@ -47,16 +46,16 @@ public class Artifact {
 
     public Artifact setTitle(String title) {
         this.title = title;
-        return null;
+        return this;
     }
 
     public Artifact setDescription(String description) {
         this.description = description;
-        return null;
+        return this;
     }
 
     public Artifact setCost(String cost) {
         this.cost = cost;
-        return null;
+        return this;
     }
 }
