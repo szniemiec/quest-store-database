@@ -2,7 +2,7 @@ package Server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import controller.LoginAccesDAO;
+import daos.loginAccess.LoginAccesDAO;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
