@@ -8,6 +8,7 @@ import daos.mentor.MentorDAOImpl;
 import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import helpers.DataFormParser;
+import helpers.PassHash;
 import models.users.AccountCredentials;
 import models.users.Mentor;
 
@@ -23,6 +24,7 @@ public class RegistrationHandle implements HttpHandler {
     PostgreSQLJDBC postgreSQLJDBC;
     CodecoolerDAOImpl codecoolerDAO;
     DataFormParser dataFormParser;
+    PassHash passHash;
 
     public RegistrationHandle(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
@@ -31,6 +33,7 @@ public class RegistrationHandle implements HttpHandler {
         this.codecoolerDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
         this.mentorDao = new MentorDAOImpl(postgreSQLJDBC);
         this.dataFormParser = new DataFormParser();
+        this.passHash = new PassHash();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class RegistrationHandle implements HttpHandler {
             System.out.println(data);
 
             accountCredentials.setLogin(data.get("login"))
-                    .setPassword(data.get("password"))
+                    .setPassword(passHash.encrypt(data.get("password")))/// tu
                     .setEmail(data.get("email"))
                     .setRoleEnum(RoleEnum.MENTOR);
 
