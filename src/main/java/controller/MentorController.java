@@ -136,7 +136,7 @@ public class MentorController {
         System.out.println(view.DESCRIPTION);
         String description = inputService.getStringInput();
         System.out.println(view.REWARD);
-        int reward = inputService.getIntInput();
+        String reward = inputService.getStringInput();
         System.out.println(view.CATEGORY);
         int categoryId = inputService.getIntInput();
         questDAO = new QuestDAOImpl(postgreSQLJDBC);
@@ -150,7 +150,7 @@ public class MentorController {
         System.out.println(view.DESCRIPTION);
         String description = inputService.getStringInput();
         System.out.println(view.COST);
-        int cost = inputService.getIntInput();
+        String cost = inputService.getStringInput();
 
         artifactDAO.addArtifact(new Artifact(title, description, cost));
         artifactDAO = new ArtifactDAOImpl(postgreSQLJDBC);
@@ -185,7 +185,7 @@ public class MentorController {
     public void editQuest(int questId) throws Exception {
         QuestDAO questDao = new QuestDAOImpl(postgreSQLJDBC);
         Quest editedQuest = questDao.getQuest(questId);
-        String newValue;
+        String newValue = null;
         int newValueInt;
         int userChoice = inputService.getIntInput();
         switch (userChoice) {
@@ -208,7 +208,7 @@ public class MentorController {
                 break;
             case 4:
                 newValueInt = getUserIntInput();
-                questDao.editQuest(editedQuest.setReward(newValueInt));
+                questDao.editQuest(editedQuest.setReward(newValue));
                 isEditing = false;
                 break;
             case 5:
@@ -256,8 +256,8 @@ public class MentorController {
                 isEditing = false;
                 break;
             case 3:
-                int newValueInt = Integer.valueOf(getUserInput());
-                artifactDao.editArtifact(artifact.setCost(newValueInt));
+                newValue = getUserInput();
+                artifactDao.editArtifact(artifact.setCost(newValue));
                 isEditing = false;
                 break;
             case 4:
