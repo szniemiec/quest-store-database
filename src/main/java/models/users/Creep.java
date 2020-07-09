@@ -2,6 +2,10 @@ package models.users;
 
 public class Creep extends User {
 
+    public Creep(AccountCredentials accountCredentials, String firstName, String lastName) {
+        super(accountCredentials, firstName, lastName);
+    }
+
     @Override
     public User setId(int id) {
         super.setId(id);
