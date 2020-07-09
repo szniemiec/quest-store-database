@@ -1,5 +1,6 @@
 package handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -8,6 +9,7 @@ import daos.codecooler.CodecoolerDAOImpl;
 import database.PostgreSQLJDBC;
 import helpers.Parser;
 import models.Artifact;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,32 +50,47 @@ public class ArtifactHandle implements HttpHandler {
 
             String name = data.get("name");
             String description = data.get("description");
-            String cost = String.valueOf(data.get("cost"));
+            String cost = data.get("cost");
 
-            Artifact artifact = new Artifact(name, description, cost);
-            artifact.setTitle(data.get("name"))
-                    .setDescription(data.get("description"))
-                    .setCost(data.get("cost"));
+            Artifact artifact = new Artifact();
+            artifact.setTitle(name)
+                    .setDescription(description)
+                    .setCost(cost);
             try {
                 artifactDAO.setArtifact(artifact);
+                sendResponse("artifact created", exchange, 201);
             } catch (Exception e) {
                 e.printStackTrace();
+                sendResponse("artifact NOT created", exchange, 400);
             }
-
         } else { //GET
-            List<Artifact> artifacts = null;
-            try {
-                artifacts = this.artifactDAO.getArtifacts();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            getArtifacts(exchange);
+        }
+    }
+
+    private void sendResponse(String response, HttpExchange exchange, int status) throws IOException {
+        if (status == 200) {
+            exchange.getResponseHeaders().put("Content-type", Collections.singletonList("application/json"));
+            exchange.getResponseHeaders().put("Access-Control-Allow-Origin", Collections.singletonList("*"));
+        }
+        exchange.sendResponseHeaders(status, response.getBytes().length);
+
+        OutputStream os = exchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    private void getArtifacts(HttpExchange exchange) throws IOException {
+        String response = "";
+        try {
+            List<Artifact> artifacts = this.artifactDAO.getArtifacts();
             ObjectMapper mapper = new ObjectMapper();
             response = mapper.writeValueAsString(artifacts);
             System.out.println(response);
+            sendResponse(response, exchange, 200);
+        } catch (SQLException | JsonProcessingException throwables) {
+            throwables.printStackTrace();
+            sendResponse(response, exchange, 404);
         }
-        exchange.sendResponseHeaders(200, response.length());
-        OutputStream outputStream = exchange.getResponseBody();
-        outputStream.write(response.getBytes());
-        outputStream.close();
     }
 }
