@@ -1,5 +1,4 @@
 import com.sun.net.httpserver.HttpServer;
-import controller.LoginController;
 import handler.*;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
@@ -13,7 +12,7 @@ public class Server {
 
         PostgreSQLJDBC database = new PostgreSQLJDBC();
         JSONService jsonService = new JSONService();
-        LoginHandler login = new LoginHandler(database);
+//        LoginHandler login = new LoginHandler(database);
 
         DatabaseCredentials credentials = jsonService.readEnviroment();
         database.connectToDatabase(credentials);
@@ -29,8 +28,6 @@ public class Server {
         server.createContext("/login", new LoginHandler(database));
         server.setExecutor(null);
         server.start();
-
         System.out.println("Server has started on port 8000");
     }
-//        database.disconnectFromDatabase();
 }
