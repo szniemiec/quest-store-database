@@ -15,24 +15,26 @@ public class UserDAO {
 
     public UserDAO(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
+        ResultSet result;
     }
 
     User newUser;
 
     public User getLoggedUser(String login, String password) throws SQLException {
         Statement st = postgreSQLJDBC.getConnection().createStatement();
-
         try {
             ResultSet result = st.executeQuery("SELECT * FROM \"Users\" WHERE \"login\" = '" + login + "' AND \"password\" = '" + password + "';");
-            newUser = createUser(result);
+            while (result.next()) {
+                newUser = createUser(result);
+            }
         } catch (Exception e) {
+            System.out.println(newUser);
             e.printStackTrace();
         }
         return newUser;
     }
 
     private User createUser(ResultSet result) throws Exception {
-        result.next();
         int roleId = result.getInt("role_id");
         switch (roleId) {
             case 1:
@@ -43,7 +45,7 @@ public class UserDAO {
                 String firstName = result.getString("first_name");
                 String lastName = result.getString("last_name");
 
-                AccountCredentials accountCredentials = new AccountCredentials(login, password, email, roleToEnum(id));
+                AccountCredentials accountCredentials = new AccountCredentials(login, password, email, roleToEnum(roleId));
                 accountCredentials.setLogin(login);
                 accountCredentials.setPassword(password);
                 accountCredentials.setEmail(email);

@@ -8,6 +8,7 @@ import daos.loginAccess.LoginAccesDAO;
 import database.PostgreSQLJDBC;
 import helpers.CookieHelper;
 import helpers.DataFormParser;
+import helpers.PassHash;
 import models.users.User;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
@@ -26,12 +27,14 @@ public class LoginHandler implements HttpHandler {
     private DataFormParser formDataParser;
     private Optional<HttpCookie> cookie;
     private UserDAO userDao;
+    PassHash passHash;
 
     public LoginHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.loginAccesDAO = new LoginAccesDAO(postgreSQLJDBC);
         this.formDataParser = new DataFormParser();
         this.cookieHelper = new CookieHelper();
         this.userDao = new UserDAO(postgreSQLJDBC);
+        this.passHash = new PassHash();
     }
 
     @Override
@@ -48,7 +51,7 @@ public class LoginHandler implements HttpHandler {
 
             Map inputs = DataFormParser.getData(httpExchange);
             String providedMail = inputs.get("login").toString();
-            String providedPassword = inputs.get("password").toString();
+            String providedPassword = passHash.encrypt(inputs.get("password").toString());
             System.out.println(providedMail);
             System.out.println(providedPassword);
 
