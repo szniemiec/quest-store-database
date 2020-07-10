@@ -45,7 +45,7 @@ public class UserDAO {
                 String firstName = result.getString("first_name");
                 String lastName = result.getString("last_name");
 
-                AccountCredentials accountCredentials = new AccountCredentials(login, password, email, roleToEnum(id));
+                AccountCredentials accountCredentials = new AccountCredentials(login, password, email, roleToEnum(roleId));
                 accountCredentials.setLogin(login);
                 accountCredentials.setPassword(password);
                 accountCredentials.setEmail(email);
