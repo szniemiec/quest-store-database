@@ -79,45 +79,4 @@ public class LoginHandler implements HttpHandler {
         os.write(response.getBytes());
         os.close();
     }
-
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(301, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private long hash(String string) {
-        long h = 1125899906842597L; // prime
-        int len = string.length();
-        for (int i = 0; i < len; i++) {
-            h = 31 * h + string.charAt(i);
-        }
-        return h;
-    }
-
-    // NOT USED
-    private String generatePage() {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("HTML/login.twig");
-        JtwigModel model = JtwigModel.newModel();
-        return template.render(model);
-    }
-
-
-    private String redirect(List<Integer> loginData) {
-        if (!loginData.isEmpty()) {
-            int accessLevel = loginData.get(0);
-            if (accessLevel == 1) {
-                return "/codecoolerJavaPages/CodecoolerIndex";
-            }
-            if (accessLevel == 3) {
-                return "/adminJavaPages/GreetAdmin";
-            }
-            if (accessLevel == 2) {
-                return "/mentorJavaPages/mentorMainPage";
-            }
-        }
-        return null;
-    }
 }

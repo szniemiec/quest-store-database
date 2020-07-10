@@ -21,7 +21,6 @@ public class Artifact {
     }
 
     public Artifact() {
-
     }
 
     public int getId() {
