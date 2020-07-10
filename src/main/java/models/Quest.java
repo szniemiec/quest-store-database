@@ -33,7 +33,6 @@ public class Quest {
     }
 
     public Quest() {
-
     }
 
     public int getId() {

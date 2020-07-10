@@ -38,8 +38,4 @@ public class CookieHelper {
         List<HttpCookie> cookies = parseCookies(cookieStr);
         return findCookieByName(SESSION_COOKIE_NAME, cookies);
     }
-
-    public static String getSessionCookieName() {
-        return SESSION_COOKIE_NAME;
-    }
 }
