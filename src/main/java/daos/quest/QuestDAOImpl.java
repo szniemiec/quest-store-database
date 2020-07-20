@@ -5,7 +5,6 @@ import enums.QuestCategoryEnum;
 import models.Quest;
 import models.users.AccountCredentials;
 import models.users.Mentor;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

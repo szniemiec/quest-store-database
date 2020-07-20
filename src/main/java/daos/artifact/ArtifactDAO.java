@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface ArtifactDAO {
 
-    public List<Artifact> getArtifacts() throws SQLException;
+   List<Artifact> getArtifacts() throws SQLException;
 
-    public Artifact getArtifact(int id) throws SQLException;
+   Artifact getArtifact(int id) throws SQLException;
 
-    public void addArtifact(Artifact artifact);
+   void addArtifact(Artifact artifact);
 
-    public void deleteArtifact(int id);
+   void deleteArtifact(int id);
 
-    public void editArtifact(Artifact artifact);
+   void editArtifact(Artifact artifact);
 
 }

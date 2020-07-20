@@ -10,11 +10,8 @@ import database.PostgreSQLJDBC;
 import helpers.DataFormParser;
 import models.Artifact;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
