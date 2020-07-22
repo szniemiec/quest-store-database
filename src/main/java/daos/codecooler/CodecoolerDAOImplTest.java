@@ -7,29 +7,30 @@ import enums.RoleEnum;
 import models.Purse;
 import models.users.AccountCredentials;
 import models.users.Codecooler;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import models.users.User;
+import org.junit.jupiter.api.*;
 import services.JSONService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CodecoolerDAOImplTest {
 
     private PostgreSQLJDBC database;
-    private JSONService jsonService;
-    private DatabaseCredentials credentials;
     private CodecoolerDAOImpl codecoolerDAO;
-    private Codecooler testCodecooler = new Codecooler(
+    private final Codecooler testCodecooler = new Codecooler(
             new AccountCredentials("test", "test", "test@test.pl", RoleEnum.CODECOOLER),
             "test", "test", ModuleEnum.WEB, new Purse(0));
 
     @BeforeEach
     void prepareTest() {
         database = new PostgreSQLJDBC();
-        jsonService = new JSONService();
-        credentials = jsonService.readEnviroment();
+        JSONService jsonService = new JSONService();
+        DatabaseCredentials credentials = jsonService.readEnviroment();
         database.connectToDatabase(credentials);
         codecoolerDAO = new CodecoolerDAOImpl(database);
     }
@@ -43,61 +44,7 @@ class CodecoolerDAOImplTest {
     }
 
 
-    @org.junit.jupiter.api.Test
-    void getCodecoolersTest() throws SQLException {
-        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
-        for (Codecooler codecooler : codecoolerList) {
-            Assertions.assertNotNull(codecooler);
-        }
-    }
-
-    @org.junit.jupiter.api.Test
-    void getCodecoolerTest() throws SQLException {
-        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
-        for (int i = 0; i <= 2; i++) {
-            int randomIndex = (int) (Math.random() * codecoolerList.size() + 0);
-            Codecooler codecooler = codecoolerList.get(randomIndex);
-            Assertions.assertNotNull(codecooler);
-        }
-    }
-
-    @org.junit.jupiter.api.Test
-    void addCodecoolerTest() throws SQLException {
-        codecoolerDAO.addCodecooler(testCodecooler);
-        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
-        boolean isCodecoolerInDatabase = false;
-        for (Codecooler codecoolerInDatabase : codecoolerList) {
-            String emailInDatabase = codecoolerInDatabase.getAccountCredentials().getEmail();
-            String loginInDatabase = codecoolerInDatabase.getAccountCredentials().getLogin();
-            String emailTest = testCodecooler.getAccountCredentials().getEmail();
-            String loginTest = testCodecooler.getAccountCredentials().getLogin();
-            if (emailInDatabase.equals(emailTest) && loginInDatabase.equals(loginTest)) {
-                isCodecoolerInDatabase = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(isCodecoolerInDatabase);
-    }
-
-    @org.junit.jupiter.api.Test
-    void deleteCodecoolerTest() throws SQLException {
-        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
-        boolean isCodecoolerInDatabase = true;
-        for (Codecooler codecoolerInDatabase : codecoolerList) {
-            String emailInDatabase = codecoolerInDatabase.getAccountCredentials().getEmail();
-            String loginInDatabase = codecoolerInDatabase.getAccountCredentials().getLogin();
-            String emailTest = testCodecooler.getAccountCredentials().getEmail();
-            String loginTest = testCodecooler.getAccountCredentials().getLogin();
-            if (emailInDatabase.equals(emailTest) && loginInDatabase.equals(loginTest)) {
-                isCodecoolerInDatabase = false;
-                codecoolerDAO.deleteCodecooler(codecoolerInDatabase.getId());
-                break;
-            }
-        }
-        Assertions.assertFalse(isCodecoolerInDatabase);
-    }
-
-    @org.junit.jupiter.api.Test
+    @Test
     void setCodecoolerTest() throws Exception {
         String emailTest = "testED@testED.pl;";
         String loginTest = "testED";
@@ -118,6 +65,39 @@ class CodecoolerDAOImplTest {
             }
         }
         Assertions.assertTrue(isCodecoolerSet);
+    }
+
+    @Test
+    void getCodecoolersTest() throws SQLException {
+        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
+        assertFalse(codecoolerList.contains(null));
+    }
+
+    @Test
+    void addCodecoolerTest() throws SQLException {
+        // Act
+        codecoolerDAO.addCodecooler(testCodecooler);
+        // Assert
+        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
+        boolean codecoolerFound = codecoolerList.stream()
+                .map(User::getAccountCredentials)
+                .anyMatch(matchingCredentials());
+        assertTrue(codecoolerFound);
+    }
+
+    private Predicate<AccountCredentials> matchingCredentials() {
+        return accountCredentials -> testCodecooler.getAccountCredentials().equals(accountCredentials);
+    }
+
+    @Test
+    void deleteCodecoolerTest() throws SQLException {
+        // metoda -> znajdź codecoolera o zgodnych credentialach w liście
+        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
+        boolean isCodecoolerInDatabase = true;
+        // Codecooler ccer = getCCWithCreden(lista)
+        // dao.delete(ccer)
+        // Codecooler cer2 = dao.get(ccer.id())
+        Assertions.assertFalse(isCodecoolerInDatabase);
     }
 
 
