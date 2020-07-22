@@ -11,6 +11,10 @@ public interface CodecoolerDAO {
 
     public Codecooler getCodecooler(int id) throws SQLException;
 
+    public void addCodecooler(Codecooler codecooler);
+
+    public void addCodecoolerWithId(Codecooler codecooler);
+
     public void deleteCodecooler(int id);
 
 }
