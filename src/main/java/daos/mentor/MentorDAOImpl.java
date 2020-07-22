@@ -1,5 +1,6 @@
 package daos.mentor;
 
+import daos.UserDAO;
 import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import models.users.AccountCredentials;
@@ -13,6 +14,7 @@ import java.util.List;
 public class MentorDAOImpl implements MentorDAO {
     private PostgreSQLJDBC postgreSQLJDBC;
     private ResultSet result;
+    private UserDAO userDAO;
 
     public MentorDAOImpl(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
