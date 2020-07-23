@@ -14,7 +14,7 @@ public class JSONService {
         try {
             Gson gson = new Gson();
 
-            BufferedReader reader = Files.newBufferedReader(Paths.get("TestEnviroment.json"));
+            BufferedReader reader = Files.newBufferedReader(Paths.get("enviroment.json"));
 
             DatabaseCredentials credentials = gson.fromJson(reader, DatabaseCredentials.class);
 
