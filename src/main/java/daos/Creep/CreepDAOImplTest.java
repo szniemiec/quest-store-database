@@ -120,3 +120,21 @@ class CreepDAOImplTest {
         List<Mentor> mentorList = creepDAO.getMentors();
         Assertions.assertNotNull(mentorList.contains(null));
     }
+
+    @Test
+    void addMentorTest() throws Exception {
+        creepDAO.addMentor(mentorTest);
+        List<Mentor> mentorList = creepDAO.getMentors();
+        boolean isMentorInDatabase = mentorList.stream()
+                .map(User::getAccountCredentials)
+                .anyMatch(matchingCredentials());
+        Assertions.assertTrue(isMentorInDatabase);
+    }
+
+    private Predicate<AccountCredentials> matchingCredentials() {
+        return accountCredentials -> mentorTest.getAccountCredentials().equals(accountCredentials);
+    }
+
+
+
+}
