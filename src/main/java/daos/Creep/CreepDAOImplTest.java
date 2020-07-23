@@ -108,3 +108,9 @@ class CreepDAOImplTest {
         } catch (SQLException ignore) {
         }
     }
+
+    @Test
+    void getMentorsTest() throws Exception {
+        List<Mentor> mentorList = creepDAO.getMentors();
+        Assertions.assertFalse(mentorList.contains(null));
+    }
