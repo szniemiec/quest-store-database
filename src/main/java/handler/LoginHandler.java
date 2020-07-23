@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LoginHandler implements HttpHandler {
-    private CookieHelper cookieHelper;
-    private LoginAccesDAO loginAccesDAO;
+    private final CookieHelper cookieHelper;
+    private final LoginAccesDAO loginAccesDAO;
     private DataFormParser formDataParser;
     private Optional<HttpCookie> cookie;
-    private UserDAO userDao;
+    private final UserDAO userDao;
     PassHash passHash;
     private String response = "";
 
@@ -51,9 +51,9 @@ public class LoginHandler implements HttpHandler {
         }
         if (method.equals("POST")) {
 
-            Map inputs = DataFormParser.getData(httpExchange);
-            String providedMail = inputs.get("login").toString();
-            String providedPassword = passHash.encrypt(inputs.get("password").toString());
+            Map<String, String> inputs = DataFormParser.getData(httpExchange);
+            String providedMail = inputs.get("login");
+            String providedPassword = PassHash.encrypt(inputs.get("password"));
 
             try {
                 User user = userDao.getLoggedUser(providedMail, providedPassword);
@@ -61,8 +61,8 @@ public class LoginHandler implements HttpHandler {
                 response = mapper.writeValueAsString(user);
                 sendResponse(response, httpExchange, 200);
 
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
                 sendResponse("User not authorised", httpExchange, 401);
             }
         }
