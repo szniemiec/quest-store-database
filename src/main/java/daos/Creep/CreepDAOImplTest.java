@@ -48,4 +48,25 @@ class CreepDAOImplTest {
         }
     }
 
-
+    @Test
+    void setCreepTest() throws Exception {
+        String emailTest = "testED@testED.pl;";
+        String loginTest = "testED";
+        AccountCredentials testCredentials = testCreep.getAccountCredentials();
+        testCredentials.setEmail(emailTest);
+        testCredentials.setLogin(loginTest);
+        testCreep.setAccountCredentials(testCredentials);
+        creepDAO.setCodecooler(testCreep, testCreep.getAccountCredentials());
+        List<Codecooler> codecoolerList = creepDAO.getCodecoolers();
+        boolean isCodecoolerSet = false;
+        for (Codecooler codecoolerInDatabase : codecoolerList) {
+            String emailInDatabase = codecoolerInDatabase.getAccountCredentials().getEmail();
+            String loginInDatabase = codecoolerInDatabase.getAccountCredentials().getLogin();
+            if (emailInDatabase.equals(emailTest) && loginInDatabase.equals(loginTest)) {
+                isCodecoolerSet = true;
+                creepDAO.deleteCodecooler(codecoolerInDatabase.getId());
+                break;
+            }
+        }
+        Assertions.assertTrue(isCodecoolerSet);
+    }
