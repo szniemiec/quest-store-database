@@ -70,3 +70,9 @@ class CreepDAOImplTest {
         }
         Assertions.assertTrue(isCodecoolerSet);
     }
+
+    @Test
+    void getCodecoolersTest() throws SQLException {
+        List<Codecooler> codecoolerList = creepDAO.getCodecoolers();
+        assertFalse(codecoolerList.contains(null));
+    }
