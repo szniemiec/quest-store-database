@@ -90,3 +90,21 @@ class CreepDAOImplTest {
     private Predicate<AccountCredentials> matchingCredentials() {
         return accountCredentials -> testCreep.getAccountCredentials().equals(accountCredentials);
     }
+
+    @BeforeEach
+    void setup() {
+        postgreSQLJDBC.connectToDatabase(credentials);
+        creepDAO = new CreepDAOImpl(postgreSQLJDBC);
+        AccountCredentials accountCredentials1 = new AccountCredentials("tom", "tom123", "tom@op.pl", RoleEnum.MENTOR);
+        AccountCredentials accountCredentials2 = new AccountCredentials("Ana", "ana123", "ana@op.pl", RoleEnum.MENTOR);
+        creepTest = new Creep(1, accountCredentials1, "Tomasz", "Nowak");
+        Creep creep2 = new Creep(2, accountCredentials2, "Anna", "Kowalska");
+    }
+
+    @AfterEach
+    void closeTest() {
+        try {
+            postgreSQLJDBC.disconnectFromDatabase();
+        } catch (SQLException ignore) {
+        }
+    }
