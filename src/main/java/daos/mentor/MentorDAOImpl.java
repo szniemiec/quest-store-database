@@ -5,6 +5,7 @@ import database.PostgreSQLJDBC;
 import enums.RoleEnum;
 import models.users.AccountCredentials;
 
+import models.users.Codecooler;
 import models.users.Mentor;
 
 import java.sql.*;
@@ -93,6 +94,26 @@ public class MentorDAOImpl implements MentorDAO {
             ps.setInt(4, 2);
             ps.setString(5, mentor.getFirstName());
             ps.setString(6, mentor.getLastName());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addMentor(Mentor mentor) {
+        final String INSERT_SQL = "INSERT INTO \"Users\" " +
+                "(login, password, email, role_id, first_name, last_name, module_id, coins) " +
+                "VALUES (?,?,?,?,?,?,?,?)";
+        Connection c = postgreSQLJDBC.getConnection();
+        try {
+            PreparedStatement ps = c.prepareStatement(INSERT_SQL);
+            ps.setString(1, mentor.getAccountCredentials().getLogin());
+            ps.setString(2, mentor.getAccountCredentials().getPassword());
+            ps.setString(3, mentor.getAccountCredentials().getEmail());
+            ps.setInt(4, mentor.getAccountCredentials().getRoleEnum().getRoleId());
+            ps.setString(5, mentor.getFirstName());
+            ps.setString(6, mentor.getLastName());
+
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
