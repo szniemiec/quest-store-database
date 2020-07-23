@@ -16,6 +16,12 @@ public class Codecooler extends User {
         super(accountCredentials, firstName, lastName);
     }
 
+    public Codecooler(AccountCredentials accountCredentials, String firstName, String lastName, ModuleEnum moduleEnum, Purse purse) {
+        super(accountCredentials, firstName, lastName);
+        this.moduleEnum = moduleEnum;
+        this.purse = purse;
+    }
+
     public Codecooler(int id, AccountCredentials accountCredentials, String firstName, String lastName, ModuleEnum moduleEnum, Purse purse) {
         super(id, accountCredentials, firstName, lastName);
         this.moduleEnum = moduleEnum;
@@ -49,6 +55,7 @@ public class Codecooler extends User {
         super.setLastName(lastName);
         return null;
     }
+
     public ModuleEnum getModule() {
         return moduleEnum;
     }

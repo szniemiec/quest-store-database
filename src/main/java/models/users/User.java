@@ -57,5 +57,4 @@ public abstract class User {
     public String getLastName() {
         return lastName;
     }
-
 }

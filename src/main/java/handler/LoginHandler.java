@@ -8,6 +8,7 @@ import daos.loginAccess.LoginAccesDAO;
 import database.PostgreSQLJDBC;
 import helpers.CookieHelper;
 import helpers.DataFormParser;
+import helpers.PassHash;
 import models.users.User;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
@@ -26,12 +27,14 @@ public class LoginHandler implements HttpHandler {
     private DataFormParser formDataParser;
     private Optional<HttpCookie> cookie;
     private UserDAO userDao;
+    PassHash passHash;
 
     public LoginHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.loginAccesDAO = new LoginAccesDAO(postgreSQLJDBC);
         this.formDataParser = new DataFormParser();
         this.cookieHelper = new CookieHelper();
         this.userDao = new UserDAO(postgreSQLJDBC);
+        this.passHash = new PassHash();
     }
 
     @Override
@@ -48,7 +51,7 @@ public class LoginHandler implements HttpHandler {
 
             Map inputs = DataFormParser.getData(httpExchange);
             String providedMail = inputs.get("login").toString();
-            String providedPassword = inputs.get("password").toString();
+            String providedPassword = passHash.encrypt(inputs.get("password").toString());
             System.out.println(providedMail);
             System.out.println(providedPassword);
 
@@ -75,46 +78,5 @@ public class LoginHandler implements HttpHandler {
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
-    }
-
-
-    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-        httpExchange.sendResponseHeaders(301, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
-    }
-
-    private long hash(String string) {
-        long h = 1125899906842597L; // prime
-        int len = string.length();
-        for (int i = 0; i < len; i++) {
-            h = 31 * h + string.charAt(i);
-        }
-        return h;
-    }
-
-    // NOT USED
-    private String generatePage() {
-        JtwigTemplate template = JtwigTemplate.classpathTemplate("HTML/login.twig");
-        JtwigModel model = JtwigModel.newModel();
-        return template.render(model);
-    }
-
-
-    private String redirect(List<Integer> loginData) {
-        if (!loginData.isEmpty()) {
-            int accessLevel = loginData.get(0);
-            if (accessLevel == 1) {
-                return "/codecoolerJavaPages/CodecoolerIndex";
-            }
-            if (accessLevel == 3) {
-                return "/adminJavaPages/GreetAdmin";
-            }
-            if (accessLevel == 2) {
-                return "/mentorJavaPages/mentorMainPage";
-            }
-        }
-        return null;
     }
 }
