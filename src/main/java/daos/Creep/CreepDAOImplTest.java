@@ -114,3 +114,9 @@ class CreepDAOImplTest {
         List<Mentor> mentorList = creepDAO.getMentors();
         Assertions.assertFalse(mentorList.contains(null));
     }
+
+    @Test
+    void getMentorTest() throws Exception {
+        List<Mentor> mentorList = creepDAO.getMentors();
+        Assertions.assertNotNull(mentorList.contains(null));
+    }
