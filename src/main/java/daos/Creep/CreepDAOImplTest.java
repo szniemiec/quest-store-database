@@ -76,3 +76,17 @@ class CreepDAOImplTest {
         List<Codecooler> codecoolerList = creepDAO.getCodecoolers();
         assertFalse(codecoolerList.contains(null));
     }
+
+    @Test
+    void addCodecoolerTest() throws SQLException {
+        creepDAO.addCodecooler(testCodecooler);
+        List<Codecooler> codecoolerList = creepDAO.getCodecoolers();
+        boolean codecoolerFound = codecoolerList.stream()
+                .map(User::getAccountCredentials)
+                .anyMatch(matchingCredentials());
+        assertTrue(codecoolerFound);
+    }
+
+    private Predicate<AccountCredentials> matchingCredentials() {
+        return accountCredentials -> testCreep.getAccountCredentials().equals(accountCredentials);
+    }
