@@ -33,11 +33,11 @@ class UserDAOTest {
         User user2 = new Mentor(2, accountCredentials2, "Anna", "Kowalska");
     }
 
-    @Test
-    void CheckIfUserCreated() throws Exception {
-        userDao.createUser(rs);
-
-        Mockito.when(rs.getString(""))
-    }
+//    @Test
+//    void CheckIfUserCreated() throws Exception {
+//        userDao.createUser(rs);
+//
+//        Mockito.when(rs.getString(""))
+//    }
 
 }
