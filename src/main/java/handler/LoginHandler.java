@@ -10,14 +10,12 @@ import helpers.CookieHelper;
 import helpers.DataFormParser;
 import helpers.PassHash;
 import models.users.User;
-import org.jtwig.JtwigModel;
-import org.jtwig.JtwigTemplate;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +26,7 @@ public class LoginHandler implements HttpHandler {
     private Optional<HttpCookie> cookie;
     private UserDAO userDao;
     PassHash passHash;
+    private String response = "";
 
     public LoginHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.loginAccesDAO = new LoginAccesDAO(postgreSQLJDBC);
@@ -37,9 +36,12 @@ public class LoginHandler implements HttpHandler {
         this.passHash = new PassHash();
     }
 
+    public String getResponse() {
+        return response;
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String response = "";
         String method = httpExchange.getRequestMethod();
 
         if (method.equals("GET")) {
@@ -52,12 +54,9 @@ public class LoginHandler implements HttpHandler {
             Map inputs = DataFormParser.getData(httpExchange);
             String providedMail = inputs.get("login").toString();
             String providedPassword = passHash.encrypt(inputs.get("password").toString());
-            System.out.println(providedMail);
-            System.out.println(providedPassword);
 
             try {
                 User user = userDao.getLoggedUser(providedMail, providedPassword);
-                System.out.println(user.getFirstName());
                 ObjectMapper mapper = new ObjectMapper();
                 response = mapper.writeValueAsString(user);
                 sendResponse(response, httpExchange, 200);
@@ -79,4 +78,5 @@ public class LoginHandler implements HttpHandler {
         os.write(response.getBytes());
         os.close();
     }
+
 }

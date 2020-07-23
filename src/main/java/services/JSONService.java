@@ -27,4 +27,9 @@ public class JSONService {
         return null;
     }
 
+    public String parseToString(Object obj) {
+        Gson g = new Gson();
+        return g.toJson(obj);
+    }
+
 }
