@@ -6,25 +6,28 @@ import enums.RoleEnum;
 import models.users.AccountCredentials;
 import models.users.Mentor;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import models.users.User;
+import org.junit.jupiter.api.*;
+import services.JSONService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Predicate;
 
 class MentorDAOImplTest {
+    Mentor mentorTest;
+    JSONService jsonService = new JSONService();
+    DatabaseCredentials credentials = jsonService.readEnviroment();
     private MentorDAOImpl mentorDAO;
-    DatabaseCredentials database;
     PostgreSQLJDBC postgreSQLJDBC = new PostgreSQLJDBC();
 
     @BeforeEach
     void setup() {
-        postgreSQLJDBC.connectToDatabase(database);
+        postgreSQLJDBC.connectToDatabase(credentials);
+        mentorDAO = new MentorDAOImpl(postgreSQLJDBC);
         AccountCredentials accountCredentials1 = new AccountCredentials("tom", "tom123", "tom@op.pl", RoleEnum.MENTOR);
         AccountCredentials accountCredentials2 = new AccountCredentials("Ana", "ana123", "ana@op.pl", RoleEnum.MENTOR);
-        Mentor mentor = new Mentor(1, accountCredentials1, "Tomasz", "Nowak");
+        mentorTest = new Mentor(1, accountCredentials1, "Tomasz", "Nowak");
         Mentor mentor2 = new Mentor(2, accountCredentials2, "Anna", "Kowalska");
     }
 
@@ -39,36 +42,26 @@ class MentorDAOImplTest {
     @Test
     void getMentorsTest() throws Exception {
         List<Mentor> mentorList = mentorDAO.getMentors();
-        for (Mentor mentor : mentorList) {
-            Assertions.assertNotNull(mentor);
-        }
+        Assertions.assertFalse(mentorList.contains(null));
     }
 
     @Test
     void getMentorTest() throws Exception {
         List<Mentor> mentorList = mentorDAO.getMentors();
-        for (int i = 0; i <= 2; i++) {
-            int randomIndex = (int) (Math.random() * mentorList.size() + 0);
-            Mentor mentor = mentorList.get(randomIndex);
-            Assertions.assertNotNull(mentor);
-        }
+        Assertions.assertNotNull(mentorList.contains(null));
     }
 
     @Test
-    void deleteMentorTest() throws Exception {
+    void addMentorTest() throws Exception {
+        mentorDAO.addMentor(mentorTest);
         List<Mentor> mentorList = mentorDAO.getMentors();
-        boolean isMentorInDatabase = true;
-        for (Mentor mentor : mentorList) {
-            String emailInDatabase = mentor.getAccountCredentials().getEmail();
-            String loginInDatabase = mentor.getAccountCredentials().getLogin();
-            String emailTest = mentor.getAccountCredentials().getEmail();
-            String loginTest = mentor.getAccountCredentials().getLogin();
-            if (emailInDatabase.equals(emailTest) && loginInDatabase.equals(loginTest)) {
-                isMentorInDatabase = false;
-                mentorDAO.deleteMentor(mentor.getId());
-                break;
-            }
-        }
-        Assertions.assertFalse(isMentorInDatabase);
+        boolean isMentorInDatabase = mentorList.stream()
+                .map(User::getAccountCredentials)
+                .anyMatch(matchingCredentials());
+        Assertions.assertTrue(isMentorInDatabase);
+    }
+
+    private Predicate<AccountCredentials> matchingCredentials() {
+        return accountCredentials -> mentorTest.getAccountCredentials().equals(accountCredentials);
     }
 }
