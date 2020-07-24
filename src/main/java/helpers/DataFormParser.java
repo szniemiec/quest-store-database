@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataFormParser {
-    private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
+    public static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
         Map<String, String> map = new HashMap<>();
         String[] pairs = formData.split("&");
         for(String pair : pairs){
