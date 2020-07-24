@@ -75,9 +75,7 @@ class CodecoolerDAOImplTest {
 
     @Test
     void addCodecoolerTest() throws SQLException {
-        // Act
         codecoolerDAO.addCodecooler(testCodecooler);
-        // Assert
         List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
         boolean codecoolerFound = codecoolerList.stream()
                 .map(User::getAccountCredentials)
@@ -89,16 +87,26 @@ class CodecoolerDAOImplTest {
         return accountCredentials -> testCodecooler.getAccountCredentials().equals(accountCredentials);
     }
 
-    @Test
-    void deleteCodecoolerTest() throws SQLException {
-        // metoda -> znajdź codecoolera o zgodnych credentialach w liście
-        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
-        boolean isCodecoolerInDatabase = true;
-        // Codecooler ccer = getCCWithCreden(lista)
-        // dao.delete(ccer)
-        // Codecooler cer2 = dao.get(ccer.id())
-        Assertions.assertFalse(isCodecoolerInDatabase);
-    }
+//    @Test
+//    void deleteCodecoolerTest() throws SQLException {
+//        Codecooler codecoolerInDatabase = findCodecoolerInList(testCodecooler);
+//        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
+//        boolean isCodecoolerInDatabase = true;
+//        // Codecooler ccer = getCCWithCreden(lista)
+//        // dao.delete(ccer)
+//        // Codecooler cer2 = dao.get(ccer.id())
+//        Assertions.assertFalse(isCodecoolerInDatabase);
+//    }
+//
+//    private boolean findCodecoolerInList(Codecooler codecooler) throws SQLException {
+//        List<Codecooler> codecoolerList = codecoolerDAO.getCodecoolers();
+//        for (Codecooler c : codecoolerList) {
+//            if (c.getAccountCredentials() == codecooler.getAccountCredentials()) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 
 }
