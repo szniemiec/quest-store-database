@@ -2,6 +2,8 @@ package models.users;
 
 import enums.RoleEnum;
 
+import java.util.Objects;
+
 public class AccountCredentials {
 
     private String login;
@@ -54,5 +56,16 @@ public class AccountCredentials {
 
     public RoleEnum getRoleEnum() {
         return roleEnum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountCredentials that = (AccountCredentials) o;
+        return login.equals(that.login) &&
+                password.equals(that.password) &&
+                email.equals(that.email) &&
+                roleEnum == that.roleEnum;
     }
 }
