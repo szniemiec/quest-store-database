@@ -30,6 +30,7 @@ class CreepHandlerTest {
         ///
 
     }
+
     @Test
     void handle() throws Exception {
         HttpExchange httpExchangeMock = Mockito.mock(HttpExchange.class);
@@ -45,6 +46,7 @@ class CreepHandlerTest {
 //        Assertions.assertEquals(expected, creepHandler.getResponse());
         Assertions.assertNotNull(creepHandler.getResponse());
     }
+
     @AfterEach
     void closeTest() {
         try {
