@@ -1,8 +1,6 @@
 package controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+
 import daos.artifact.ArtifactDAOImpl;
 import daos.mentor.MentorDAOImpl;
 import daos.quest.QuestDAO;
@@ -12,13 +10,9 @@ import enums.QuestCategoryEnum;
 import models.Artifact;
 import models.Quest;
 import models.users.Codecooler;
-import models.users.Mentor;
+
 import services.InputService;
 import view.View;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -84,7 +78,7 @@ public class MentorController {
         }
     }
 
-    public void HandleMenuEditQuest() throws Exception {
+    public void HandleMenuEditQuest() {
         boolean isRunning = true;
         while (isRunning) {
             view.clearScreen();
@@ -93,7 +87,7 @@ public class MentorController {
             String input = scanner.nextLine();
             switch (input) {
                 case "1":
-                    editQuestDetailsMenu();
+//                    editQuestDetailsMenu();
                     break;
                 case "2":
                     removeQuest();
@@ -192,11 +186,13 @@ public class MentorController {
             case 1:
                 newValue = getUserInput();
                 questDao.editQuest(editedQuest.setName(newValue));
+                questDao.editQuest(quest.setName(newValue));
                 isEditing = false;
                 break;
             case 2:
                 newValue = getUserInput();
                 questDao.editQuest(editedQuest.setDescription(newValue));
+                questDao.editQuest(quest.setDescription(newValue));
                 isEditing = false;
                 break;
             case 3:
@@ -204,11 +200,15 @@ public class MentorController {
                 newValueInt = getUserIntInput();
                 value = categoryIdToEnum(newValueInt);
                 questDao.editQuest(editedQuest.setCategory(value));
+                newValue = getUserInput();
+//                questDao.editQuest(quest.setCategory(newValue));
                 isEditing = false;
                 break;
             case 4:
                 newValueInt = getUserIntInput();
                 questDao.editQuest(editedQuest.setReward(newValue));
+                newValue = getUserInput();
+                questDao.editQuest(quest.setReward(newValue));
                 isEditing = false;
                 break;
             case 5:
@@ -279,4 +279,5 @@ public class MentorController {
         }
         return questCategoryEnum;
     }
+
 }

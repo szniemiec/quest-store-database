@@ -1,9 +1,8 @@
-package handler;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
+import handler.LoginHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

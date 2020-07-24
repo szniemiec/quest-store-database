@@ -1,5 +1,4 @@
-package daos.codecooler;
-
+import daos.codecooler.CodecoolerDAOImpl;
 import database.DatabaseCredentials;
 import database.PostgreSQLJDBC;
 import enums.ModuleEnum;
