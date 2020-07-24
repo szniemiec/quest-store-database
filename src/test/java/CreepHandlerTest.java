@@ -35,13 +35,14 @@ class CreepHandlerTest {
     void handle() throws Exception {
         HttpExchange httpExchangeMock = Mockito.mock(HttpExchange.class);
         MentorDAOImpl mentorDaoMock = Mockito.mock(MentorDAOImpl.class);
-        Mockito.when(httpExchangeMock.getRequestURI()).thenReturn(URI.create("/creep/mentors"));
-        Mockito.when(mentorDaoMock.getMentors()).thenReturn(new ArrayList<>());
-        Mockito.when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
-        Mockito.when(httpExchangeMock.getResponseBody()).thenReturn(new ByteArrayOutputStream(180));
         String expected = "{\"id\":23,\"accountCredentials\":{\"login\":\"adrian\",\"password\":" +
                 "\"c23ad6f18412014673b2d04794ca038ef6767fe94afe408dffb775362fe07e68\"," +
                 "\"email\":\"adrian@gmail.com\",\"roleEnum\":\"MENTOR\"},\"firstName\":\"Adrian\",\"lastName\":\"Adrian\"}";
+
+        Mockito.when(httpExchangeMock.getRequestURI()).thenReturn(URI.create("/creep/mentors"));
+        Mockito.when(mentorDaoMock.getMentors()).thenReturn(new ArrayList<>());
+        Mockito.when(httpExchangeMock.getResponseHeaders()).thenReturn(new Headers());
+        Mockito.when(httpExchangeMock.getResponseBody()).thenReturn(new ByteArrayOutputStream(expected.length()));
         creepHandler.handle(httpExchangeMock);
 //        Assertions.assertEquals(expected, creepHandler.getResponse());
         Assertions.assertNotNull(creepHandler.getResponse());
