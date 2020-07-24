@@ -21,11 +21,16 @@ public class CreepHandler implements HttpHandler {
     PostgreSQLJDBC postgreSQLJDBC;
     private MentorDAOImpl mentorDAO;
     private CodecoolerDAOImpl studentDAO;
+    private String response = "";
 
     public CreepHandler(PostgreSQLJDBC postgreSQLJDBC) {
         this.postgreSQLJDBC = postgreSQLJDBC;
         mentorDAO = new MentorDAOImpl(postgreSQLJDBC);
         studentDAO = new CodecoolerDAOImpl(postgreSQLJDBC);
+    }
+
+    public String getResponse() {
+        return response;
     }
 
     @Override
@@ -36,8 +41,6 @@ public class CreepHandler implements HttpHandler {
         final String MENTORS_LIST = "/creep/mentors";
 
         ObjectMapper mapper = new ObjectMapper();
-        String response = "";
-
         System.out.println(Arrays.toString(actions));
         System.out.println(url);
 
